@@ -1,54 +1,42 @@
-Am înțeles. Vrei să te asigur că ai textul exact pe care trebuie să-l copiezi în Notepad pentru a crea fișierul README.md în rădăcina proiectului tău.
+# Project 2 - Flight Management Application (Full MVC & List-Based Repository)
 
-Iată conținutul final, fără formatări Markdown (fără *, #, ---), pe care îl poți copia direct în Notepad:
+## Project Goal and Architecture
 
-Project 1 - Flight Management Application (Basic Structure)
+The goal was to fully implement the multi-layered architecture using **MVC (Model-View-Controller)** pattern, ensuring clean separation of concerns between layers.
 
-Project Goal and Architecture
+**Key Architectural Change:** The persistence layer was migrated from using `Map` to **`java.util.List`** for all in-memory storage solutions, adhering strictly to the required implementation style.
 
-The primary goal of this first phase was to establish the basic architecture of a Spring Boot application following Object-Oriented Programming (OOP) principles and the MVC (Model-View-Controller) pattern with a clear separation of layers: Model – Repository – Service – Controller.
+## Design Decisions and Implementation
 
-Data Persistence: All data is stored In-Memory using Java Collections (Map), as required. No database connection is used.
+### A. Repository Implementation (List-Based Storage)
 
-Design Decisions (Requirement 6)
+**Decision:** Implemented `AbstractRepository<T, String>` and a generic base class **`InMemoryRepository<T, ID>`** which exclusively uses `List<T>` for data storage.
 
-A. Repository Implementation (DRY Principle)
+**Justification:** This fulfills the requirement to use Lists. We handle lookups/updates by iterating through the list streams (e.g., using `.stream().filter()`), ensuring data integrity even without the direct key access of a Map.
 
-Decision: We implemented a generic abstract class InMemoryRepository<T>. This class centralizes the core CRUD logic (save, findAll, findById, delete) using a ConcurrentHashMap for thread-safe in-memory storage.
+### B. Service Layer Refinement
 
-Justification: This adheres to the Don't Repeat Yourself (DRY) principle, as specific repositories (e.g., PassengerRepository) only need to extend this generic class.
+All major entities (`Flight`, `Airplane`, `Staff`, `Ticket`, `Luggage`, etc.) now have dedicated **Service** classes.
+**Key Feature:** Services correctly throw **`ResourceNotFoundException`** if an entity ID is not found during a lookup operation.
 
-B. Controller Organization (SRP Principle)
+### C. Model Extensions (BaseEntity & Polymorphism)
 
-Decision: We chose to implement one dedicated Controller per main entity (e.g., PassengerController, FlightController).
+* **Uniformity:** All domain models (Flights, Passengers, etc.) now extend **`BaseEntity`** to ensure every entity has a unique String `id`.
+* **Staff Polymorphism:** The abstract `Staff` model correctly uses **Jackson annotations (`@JsonTypeInfo`)** to allow Controllers to handle both `AirlineEmployee` and `AirportEmployee` objects through a single endpoint.
 
-Justification: This organization ensures clear API path organization and maintains the Single Responsibility Principle (SRP), making the application easier to extend in future phases.
+## How to Run the Application
 
-Model Extensions (Requirement 5)
+The project is built using Maven (or Gradle, depending on your setup).
 
-As required by point 5, the following 1-2 new properties or structural changes were added to models:
+1.  **Prerequisite Check:** Ensure **OpenJDK 17** is installed and correctly configured as the **Project SDK** within IntelliJ IDEA.
+2.  **Execution:** Open the terminal in the project root directory (`.../flightmanagementproject`).
+3.  Execute the command:
+    * **If using Maven:** `mvn clean install spring-boot:run`
+    * **If using Gradle:** `.\gradlew.bat bootRun` (on Windows) or `./gradlew bootRun` (on Linux/Mac).
 
-Staff: Added the email and personalId fields to the abstract class.
+## Testing Endpoints
 
-Luggage: Implemented LuggageStatus as an Enum (CHECKED_IN, LOST, etc.) for type-safe status tracking instead of a simple string.
+The application is a RESTful API running on **port 8080**. Test connectivity using Postman or your browser:
 
-Date/Time: All date attributes (e.g., in Flight) utilize LocalDate (or appropriate Java Time API types) to adhere to Clean Code conventions.
-
-How to Run the Application
-
-The project is built using Gradle.
-
-Ensure JDK 17 is correctly configured in your IntelliJ IDEA environment.
-
-Open the terminal (PowerShell on Windows) in the project root directory (e.g., .../flightmanagement).
-
-Execute the following command:
-
-.\gradlew.bat bootRun
-
-Test Endpoints
-The application starts on port 8080.
-
-Connectivity Test: Access http://localhost:8080/hello (should return: Die Anwendung funktioniert!).
-
-API Structure Test: The Passenger API is available at http://localhost:8080/api/passengers (after implementing the respective Controller).
+* **Test 1 (Status Check):** `http://localhost:8080/hello` (Should return: `Die Anwendung funktioniert!`)
+* **Test 2 (Data Check):** Access the main entity endpoints (e.g., `http://localhost:8080/flights`, `http://localhost:8080/airplanes`).

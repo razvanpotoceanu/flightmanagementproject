@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Zboruri</title>
+    <style>
+        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<h1>Lista tuturor Zborurilor</h1>
+
+<p><a th:href="@{/flights/new}">Adaugă Zbor Nou</a></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nr. Zbor</th>
+        <th>Ora Plecare</th>
+        <th>Ora Sosire</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="flight : ${flights}">
+        <td th:text="${flight.id}">ID Zbor</td>
+        <td th:text="${flight.flightNumber}">Nr. Zbor</td>
+        <td th:text="${flight.departureTime}">Ora Plecare</td>
+        <td th:text="${flight.arrivalTime}">Ora Sosire</td>
+        <td>
+            <form th:action="@{/flights/{id}/delete(id=${flight.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/airplanes}">Mergi la Avioane</a> | <a th:href="@{/passengers}">Mergi la Pasageri</a></p>
+
+</body>
+</html>

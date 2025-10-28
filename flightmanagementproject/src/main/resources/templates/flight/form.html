@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaugă Zbor</title>
+</head>
+<body>
+
+<h1>Adaugă un Zbor Nou</h1>
+
+<form th:action="@{/flights}" th:object="${flight}" method="post">
+
+    <div>
+        <label for="flightNumber">Număr Zbor:</label>
+        <input type="text" id="flightNumber" th:field="*{flightNumber}" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="departureTime">Ora Plecare:</label>
+        <input type="text" id="departureTime" th:field="*{departureTime}" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="arrivalTime">Ora Sosire:</label>
+        <input type="text" id="arrivalTime" th:field="*{arrivalTime}" required>
+    </div>
+
+    <br>
+
+    <button type="submit">Salvează Zbor</button>
+</form>
+
+<p><a th:href="@{/flights}">Înapoi la Listă</a></p>
+
+</body>
+</html>

@@ -1,16 +1,16 @@
 package com.example.flight.flightmanagementproject.controllers;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Flight;
 import com.example.flight.flightmanagementproject.services.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/flights") // Ruta de bază
+@Controller
+@RequestMapping("/flights") // Ruta de bază: /flights
 public class FlightController {
 
     private final FlightService service;
@@ -20,27 +20,39 @@ public class FlightController {
         this.service = service;
     }
 
-    // GET /flights
+    // 1. GET ALL: Afișează lista de zboruri (index.html)
     @GetMapping
-    public List<Flight> getAllFlights() {
-        return service.getAllFlights();
+    public String getAllFlights(Model model) {
+        model.addAttribute("flights", service.getAllFlights());
+        return "flight/index";
     }
 
-    // GET /flights/{id}
-    @GetMapping("/{id}")
-    public Flight getFlight(@PathVariable String id) throws ResourceNotFoundException {
-        return service.getFlightById(id);
+    // 2. GET NEW: Afișează formularul de creare (form.html)
+    @GetMapping("/new")
+    public String showNewFlightForm(Model model) {
+        model.addAttribute("flight", new Flight());
+        return "flight/form";
     }
 
-    // POST /flights
+    // 3. POST CREATE: Procesează formularul și salvează
     @PostMapping
-    public Flight addFlight(@RequestBody Flight flight) throws RepositoryException {
-        return service.addFlight(flight);
+    public RedirectView addFlight(@ModelAttribute Flight flight) {
+        try {
+            service.addFlight(flight);
+        } catch (Exception e) {
+            // Logare simplă
+        }
+        return new RedirectView("/flights");
     }
 
-    // DELETE /flights/{id}
-    @DeleteMapping("/{id}")
-    public void deleteFlight(@PathVariable String id) throws RepositoryException {
-        service.deleteFlight(id);
+    // 4. POST DELETE: Șterge un zbor după ID
+    @PostMapping("/{id}/delete")
+    public RedirectView deleteFlight(@PathVariable String id) {
+        try {
+            service.deleteFlight(id);
+        } catch (ResourceNotFoundException e) {
+            // Logare simplă
+        }
+        return new RedirectView("/flights");
     }
 }

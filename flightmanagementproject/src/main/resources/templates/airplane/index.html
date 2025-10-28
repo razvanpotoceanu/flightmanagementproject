@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista Avioane</title>
-    <style>
-        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
-    </style>
 </head>
 <body>
 
@@ -25,8 +22,8 @@
     <tbody>
     <tr th:each="airplane : ${airplanes}">
         <td th:text="${airplane.id}">ID Av.</td>
-        <td th:text="${airplane.model}">Model Av.</td>
-        <td th:text="${airplane.capacity}">Cap. Av.</td>
+        <td th:text="${airplane.modelName}">Model Av.</td>
+        <td th:text="${airplane.number}">Cap. Av.</td>
         <td>
             <form th:action="@{/airplanes/{id}/delete(id=${airplane.id})}" method="post">
                 <button type="submit">Delete</button>

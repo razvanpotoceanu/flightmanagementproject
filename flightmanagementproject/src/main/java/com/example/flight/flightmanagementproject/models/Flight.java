@@ -26,6 +26,10 @@ public class Flight extends BaseEntity {
         this.arrivalAirportCode = arrivalAirportCode;
     }
 
+    public Flight() {
+
+    }
+
     // Getters and Setters (pentru toate câmpurile)
     public String getId() {
         return id;

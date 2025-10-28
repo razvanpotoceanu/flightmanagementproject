@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Pasageri</title>
+    <style>
+        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<h1>Lista tuturor Pasagerilor</h1>
+
+<p><a th:href="@{/passengers/new}">Adaugă Pasager Nou</a></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nume</th>
+        <th>Prenume</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="passenger : ${passengers}">
+        <td th:text="${passenger.id}">ID Pas.</td>
+        <td th:text="${passenger.firstName}">Nume</td>
+        <td th:text="${passenger.lastName}">Prenume</td>
+        <td>
+            <form th:action="@{/passengers/{id}/delete(id=${passenger.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/airplanes}">Mergi la Avioane</a></p>
+</body>
+</html>

@@ -1,16 +1,16 @@
 package com.example.flight.flightmanagementproject.controllers;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
-import com.example.flight.flightmanagementproject.models.Staff;
+import com.example.flight.flightmanagementproject.models.Staff; // Folosești clasa de bază
 import com.example.flight.flightmanagementproject.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/staff") // Ruta de bază
+@Controller
+@RequestMapping("/staff") // Ruta de bază: /staff
 public class StaffController {
 
     private final StaffService service;
@@ -20,29 +20,43 @@ public class StaffController {
         this.service = service;
     }
 
-    // GET /staff
+    // 1. GET ALL: Afișează lista
     @GetMapping
-    public List<Staff> getAllStaff() {
-        return service.getAllStaff();
+    public String getAllStaff(Model model) {
+        model.addAttribute("staff", service.getAllStaff());
+        return "staff/index";
     }
 
-    // GET /staff/{id}
-    @GetMapping("/{id}")
-    public Staff getStaff(@PathVariable String id) throws ResourceNotFoundException {
-        return service.getStaffById(id);
+    // 2. GET NEW: Afișează formularul de creare (Aici va fi simplificat)
+    @GetMapping("/new")
+    public String showNewStaffForm(Model model) {
+        // Pentru simplitate, returnăm un obiect Staff de bază
+        model.addAttribute("staff", new Staff());
+        // Dacă ai mai multe formulare (ex: /new/pilot, /new/steward),
+        // trebuie să tratezi rute separate.
+        return "staff/form";
     }
 
-    // POST /staff
+    // 3. POST CREATE: Procesează formularul și salvează
+    // Aici Spring Jackson se va ocupa de maparea pe subtip (AirlineEmployee/AirportEmployee)
     @PostMapping
-    public Staff addStaff(@RequestBody Staff staff) throws RepositoryException {
-        // Datorită @JsonTypeInfo din clasa Staff, Spring/Jackson
-        // va ști automat dacă să creeze AirlineEmployee sau AirportEmployee
-        return service.addStaff(staff);
+    public RedirectView addStaff(@ModelAttribute Staff staff) {
+        try {
+            service.addStaff(staff);
+        } catch (Exception e) {
+            // Logare simplă
+        }
+        return new RedirectView("/staff");
     }
 
-    // DELETE /staff/{id}
-    @DeleteMapping("/{id}")
-    public void deleteStaff(@PathVariable String id) throws RepositoryException {
-        service.deleteStaff(id);
+    // 4. POST DELETE: Șterge un membru Staff după ID
+    @PostMapping("/{id}/delete")
+    public RedirectView deleteStaff(@PathVariable String id) {
+        try {
+            service.deleteStaff(id);
+        } catch (ResourceNotFoundException e) {
+            // Logare simplă
+        }
+        return new RedirectView("/staff");
     }
 }

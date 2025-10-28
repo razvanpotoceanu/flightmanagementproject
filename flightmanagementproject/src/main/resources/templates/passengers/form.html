@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaugă Pasager</title>
+</head>
+<body>
+
+<h1>Adaugă un Pasager Nou</h1>
+
+<form th:action="@{/passengers}" th:object="${passenger}" method="post">
+
+    <div>
+        <label for="firstName">Nume:</label>
+        <input type="text" id="firstName" th:field="*{firstName}" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="lastName">Prenume:</label>
+        <input type="text" id="lastName" th:field="*{lastName}" required>
+    </div>
+
+    <br>
+
+    <button type="submit">Salvează Pasager</button>
+</form>
+
+<p><a th:href="@{/passengers}">Înapoi la Listă</a></p>
+
+</body>
+</html>

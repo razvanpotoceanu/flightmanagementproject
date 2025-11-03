@@ -33,4 +33,10 @@ public class AirportEmployee extends Staff {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    @Override
+    public String getEmployeeType() {
+        return this.designation; // Sau poți returna this.designation
+    }
+
 }

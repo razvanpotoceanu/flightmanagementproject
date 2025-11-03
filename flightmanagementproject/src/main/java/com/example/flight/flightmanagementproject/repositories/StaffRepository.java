@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StaffRepository extends InMemoryRepository<Staff, String> {
     // Implementarea este moștenită
+    public StaffRepository() {
+
+    }
 }

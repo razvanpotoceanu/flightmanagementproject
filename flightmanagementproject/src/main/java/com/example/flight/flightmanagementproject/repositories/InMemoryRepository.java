@@ -3,24 +3,26 @@ package com.example.flight.flightmanagementproject.repositories;
 import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.models.BaseEntity;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects; // IMPORT NECESAR
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-// Implementare generică care folosește List (thread-safe)
 public abstract class InMemoryRepository<T extends BaseEntity, ID> implements AbstractRepository<T, ID> {
 
-    // Folosim List, ca în modelul "InMemoryDeviceRepository"
-    // CopyOnWriteArrayList este thread-safe pentru citiri/scrieri
     protected final List<T> store = new CopyOnWriteArrayList<>();
 
     @Override
     public T save(T entity) throws RepositoryException {
-        // Logica de "upsert" (update sau insert)
-        // Înlăturăm versiunea veche dacă există (update)
-        store.removeIf(e -> e.getId().equals(entity.getId()));
-        // Adăugăm versiunea nouă (insert/update)
+        if (entity.getId() == null) {
+            // Service-ul ar fi trebuit să genereze un ID. Aruncăm o eroare clară.
+            throw new RepositoryException("Eroare: S-a încercat salvarea unei entități cu ID null.");
+        }
+
+        // CORECȚIE AICI: Folosim Objects.equals() pentru a preveni NullPointerException
+        // dacă un 'e.getId()' din listă este null (de la date de test vechi, etc.)
+        store.removeIf(e -> Objects.equals(e.getId(), entity.getId()));
+
         store.add(entity);
         return entity;
     }
@@ -32,19 +34,33 @@ public abstract class InMemoryRepository<T extends BaseEntity, ID> implements Ab
 
     @Override
     public Optional<T> findById(ID id) {
-        // Căutăm prin listă, exact ca în modelul profesoarei
+        if (id == null) {
+            return Optional.empty();
+        }
+
+        // CORECȚIE AICI: Folosim Objects.equals()
         return store.stream()
-                .filter(entity -> entity.getId().equals(id))
+                .filter(entity -> Objects.equals(entity.getId(), id))
                 .findFirst();
     }
 
     @Override
     public void deleteById(ID id) throws RepositoryException {
-        store.removeIf(entity -> entity.getId().equals(id));
+        if (id == null) {
+            return;
+        }
+
+        // CORECȚIE AICI: Folosim Objects.equals()
+        store.removeIf(entity -> Objects.equals(entity.getId(), id));
     }
 
     @Override
     public boolean existsById(ID id) {
-        return store.stream().anyMatch(entity -> entity.getId().equals(id));
+        if (id == null) {
+            return false;
+        }
+
+        // CORECȚIE AICI: Folosim Objects.equals()
+        return store.stream().anyMatch(entity -> Objects.equals(entity.getId(), id));
     }
 }

@@ -21,5 +21,13 @@ public class AirlineEmployee extends Staff {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
     public List<FlightAssignment> getAssignments() { return assignments; }
-    public void setAssignments(List<FlightAssignment> assignments) { this.assignments = assignments; }
+    public void setAssignments(List<FlightAssignment> assignments) { this.assignments = assignments;
+
+    }
+
+    @Override
+    public String getEmployeeType() {
+        return this.role;
+    }
+
 }

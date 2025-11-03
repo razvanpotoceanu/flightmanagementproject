@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.UUID; // Asigură-te că ai acest import
 
 @Service
 public class StaffService {
@@ -26,18 +26,19 @@ public class StaffService {
 
     // Metodă generică pentru adăugarea oricărui tip de Staff
     public Staff addStaff(Staff staff) throws RepositoryException {
+
+        // VERIFICAREA CRITICĂ: Generează ID-ul dacă lipsește
         if (staff.getId() == null || staff.getId().isEmpty()) {
             staff.setId(UUID.randomUUID().toString());
         }
 
-        // Inițializăm listele specifice dacă e cazul
+        // Inițializăm listele specifice dacă e cazul (codul tău era corect aici)
         if (staff instanceof AirlineEmployee) {
             AirlineEmployee ae = (AirlineEmployee) staff;
             if (ae.getAssignments() == null) {
                 ae.setAssignments(new ArrayList<>());
             }
         }
-        // Nu e nevoie de inițializare pentru AirportEmployee (nu are liste)
 
         return staffRepository.save(staff);
     }

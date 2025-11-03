@@ -9,13 +9,19 @@
 </head>
 <body>
 <h1>Lista tuturor Angajaților (Staff)</h1>
-<p><a th:href="@{/staff/new}">Adaugă Angajat Nou</a></p>
 
+<p>
+    <a th:href="@{/staff/new/airline}">Adaugă Angajat Companie Aeriană (Airline)</a>
+    |
+    <a th:href="@{/staff/new/airport}">Adaugă Angajat Aeroport (Airport)</a>
+</p>
+
+<hr>
 <table>
     <thead>
     <tr>
         <th>ID</th>
-        <th>Nume</th>
+        <th>Nume Complet</th>
         <th>Tip Angajat</th>
         <th>Acțiuni</th>
     </tr>
@@ -23,8 +29,10 @@
     <tbody>
     <tr th:each="member : ${staff}">
         <td th:text="${member.id}">ID Ang.</td>
-        <td th:text="${member.firstName + ' ' + member.lastName}">Nume</td>
-        <td th:text="${member.class.simpleName}">Tip</td>
+
+        <td th:text="${member.name}">Nume</td>
+
+        <td th:text="${member.getEmployeeType()}">Tip</td>
         <td>
             <form th:action="@{/staff/{id}/delete(id=${member.id})}" method="post">
                 <button type="submit">Delete</button>
@@ -33,5 +41,6 @@
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

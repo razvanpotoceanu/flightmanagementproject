@@ -46,27 +46,26 @@ public class StaffController {
         return "staff/form-airport"; // Folosim un template nou
     }
 
-    // 3a. POST CREATE (pentru AirlineEmployee)
+    // ... (restul controller-ului) ...
+
+    // 3a. POST CREATE (pentru AirlineEmployee) - (Probabil deja corectat)
     @PostMapping("/airline")
-    public RedirectView addAirlineEmployee(@ModelAttribute AirlineEmployee airlineEmployee)
-            throws RepositoryException { // Adaugă "throws" dacă e necesar
-
-        // Acum, dacă service.addStaff eșuează, vei primi eroarea 500
+    public RedirectView addAirlineEmployee(@ModelAttribute AirlineEmployee airlineEmployee) throws RepositoryException {
         service.addStaff(airlineEmployee);
+        return new RedirectView("/staff");
+    }
+
+    // 3b. POST CREATE (pentru AirportEmployee) - (MODIFICAT AICI)
+    @PostMapping("/airport")
+    public RedirectView addAirportEmployee(@ModelAttribute AirportEmployee airportEmployee) throws RepositoryException {
+        // Am scos blocul try...catch.
+        // Dacă 'addStaff' eșuează, vei vedea eroarea 500 în consolă.
+        service.addStaff(airportEmployee);
 
         return new RedirectView("/staff");
     }
 
-    // 3b. POST CREATE (pentru AirportEmployee)
-    @PostMapping("/airport") // Rută nouă
-    public RedirectView addAirportEmployee(@ModelAttribute AirportEmployee airportEmployee) {
-        try {
-            service.addStaff(airportEmployee);
-        } catch (Exception e) {
-            // Logare
-        }
-        return new RedirectView("/staff");
-    }
+// ... (restul controller-ului) ...
 
     // 4. POST DELETE (Rămâne la fel)
     @PostMapping("/{id}/delete")

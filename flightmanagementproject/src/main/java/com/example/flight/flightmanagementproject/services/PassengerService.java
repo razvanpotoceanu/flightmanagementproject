@@ -1,5 +1,6 @@
 package com.example.flight.flightmanagementproject.services;
 
+import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Passenger;
 import com.example.flight.flightmanagementproject.repositories.AbstractRepository;

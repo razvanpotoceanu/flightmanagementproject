@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaugă Bagaj</title>
+</head>
+<body>
+<h1>Adaugă Bagaj Nou</h1>
+<form th:action="@{/luggage}" th:object="${luggage}" method="post">
+
+    <div>
+        <label for="ticketId">ID Bilet (Ticket ID):</label>
+        <input type="text" id="ticketId" th:field="*{ticketId}" required>
+    </div>
+    <br>
+
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" th:field="*{status}" required>
+            <option value="">Alege un status...</option>
+            <option value="CHECKED_IN">CHECKED_IN</option>
+            <option value="LOADED">LOADED</option>
+            <option value="DELIVERED">DELIVERED</option>
+        </select>
+    </div>
+    <br>
+
+    <button type="submit">Salvează Bagajul</button>
+</form>
+<p><a th:href="@{/luggage}">Înapoi la Listă</a></p>
+</body>
+</html>

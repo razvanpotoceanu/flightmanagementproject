@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaugă Asignare</title>
+</head>
+<body>
+<h1>Adaugă Asignare Nouă</h1>
+<form th:action="@{/assignments}" th:object="${assignment}" method="post">
+
+    <div>
+        <label for="flightId">ID Zbor (Flight ID):</label>
+        <input type="text" id="flightId" th:field="*{flightId}" required>
+    </div>
+    <br>
+    <div>
+        <label for="staffId">ID Angajat (Staff ID):</label>
+        <input type="text" id="staffId" th:field="*{staffId}" required>
+    </div>
+    <br>
+    <button type="submit">Salvează Asignarea</button>
+</form>
+<p><a th:href="@{/assignments}">Înapoi la Listă</a></p>
+</body>
+</html>

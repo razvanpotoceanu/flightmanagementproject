@@ -1,0 +1,62 @@
+[
+  {
+    "id": "plane-uuid-001",
+    "number": 180,
+    "flights": [],
+    "modelName": "Boeing 737"
+  },
+  {
+    "id": "plane-uuid-002",
+    "number": 300,
+    "flights": [],
+    "modelName": "Airbus A330"
+  },
+  {
+    "id": "plane-uuid-003",
+    "number": 150,
+    "flights": [],
+    "modelName": "Airbus A320"
+  },
+  {
+    "id": "plane-uuid-004",
+    "number": 450,
+    "flights": [],
+    "modelName": "Boeing 747"
+  },
+  {
+    "id": "plane-uuid-005",
+    "number": 220,
+    "flights": [],
+    "modelName": "Boeing 787 Dreamliner"
+  },
+  {
+    "id": "plane-uuid-006",
+    "number": 500,
+    "flights": [],
+    "modelName": "Airbus A380"
+  },
+  {
+    "id": "plane-uuid-007",
+    "number": 120,
+    "flights": [],
+    "modelName": "Embraer E195"
+  },
+  {
+    "id": "plane-uuid-008",
+    "number": 90,
+    "flights": [],
+    "modelName": "ATR 72"
+  },
+  {
+    "id": "plane-uuid-009",
+    "number": 350,
+    "flights": [],
+    "modelName": "Airbus A350"
+  },
+  {
+    "id": "plane-uuid-010",
+    "number": 160,
+    "flights": [],
+    "modelName": "Boeing 737 MAX"
+  }
+]

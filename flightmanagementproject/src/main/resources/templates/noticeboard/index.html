@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panou Zboruri</title>
+    <style> table, th, td { border: 1px solid black; padding: 5px; } </style>
+</head>
+<body>
+<h1>Panou de Afișaj Zboruri</h1>
+<p><a th:href="@{/noticeboards/new}">Adaugă Panou Nou (pe o dată)</a></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID Panou</th>
+        <th>Data (LocalDate)</th>
+        <th>Nr. Zboruri (Listă)</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="nb : ${noticeboards}">
+        <td th:text="${nb.id}">NB-ID</td>
+        <td th:text="${nb.date}">Data</td>
+        <td th:text="${#lists.size(nb.flightsOfTheDay)}">0</td>
+        <td>
+            <form th:action="@{/noticeboards/{id}/delete(id=${nb.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

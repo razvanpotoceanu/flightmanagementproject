@@ -1,0 +1,72 @@
+[
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
+    "id": "staff-uuid-001",
+    "name": "Traian Vuia",
+    "role": "Pilot",
+    "assignments": []
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
+    "id": "staff-uuid-002",
+    "name": "Aurel Vlaicu",
+    "designation": "Șef Securitate",
+    "department": "Securitate Aeroportuară"
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
+    "id": "staff-uuid-003",
+    "name": "Henri Coanda",
+    "role": "Co-Pilot",
+    "assignments": []
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
+    "id": "staff-uuid-004",
+    "name": "Smaranda Braescu",
+    "role": "Stewardesă Șefă",
+    "assignments": []
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
+    "id": "staff-uuid-005",
+    "name": "Elisa Leonida Zamfirescu",
+    "designation": "Inginer Mentenanță",
+    "department": "Mentenanță"
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
+    "id": "staff-uuid-006",
+    "name": "Victor Babes",
+    "designation": "Control Trafic",
+    "department": "Operațiuni"
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
+    "id": "staff-uuid-007",
+    "name": "Nadia Comaneci",
+    "role": "Stewardesă",
+    "assignments": []
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
+    "id": "staff-uuid-008",
+    "name": "Gheorghe Hagi",
+    "role": "Steward",
+    "assignments": []
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
+    "id": "staff-uuid-009",
+    "name": "Emil Racovita",
+    "designation": "Personal Sol",
+    "department": "Ground Handling"
+  },
+  {
+    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
+    "id": "staff-uuid-010",
+    "name": "Ana Aslan",
+    "designation": "Medic Aeroport",
+    "department": "Medical"
+  }
+]

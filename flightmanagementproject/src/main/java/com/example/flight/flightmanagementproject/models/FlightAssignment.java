@@ -1,39 +1,19 @@
 package com.example.flight.flightmanagementproject.models;
 
+// Asigură-te că acest fișier există și este corect
 public class FlightAssignment extends BaseEntity {
-    private String id;
     private String flightId;
     private String staffId;
 
-    // Constructor
+    public FlightAssignment() { super(); }
     public FlightAssignment(String id, String flightId, String staffId) {
-        this.id = id;
+        super(id);
         this.flightId = flightId;
         this.staffId = staffId;
     }
-
     // Getters and Setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
-    }
-
-    public String getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
-    }
+    public String getFlightId() { return flightId; }
+    public void setFlightId(String flightId) { this.flightId = flightId; }
+    public String getStaffId() { return staffId; }
+    public void setStaffId(String staffId) { this.staffId = staffId; }
 }

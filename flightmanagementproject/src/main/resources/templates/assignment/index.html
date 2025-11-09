@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Asignări Zboruri</title>
+    <style> table, th, td { border: 1px solid black; padding: 5px; } </style>
+</head>
+<body>
+<h1>Lista Asignări (Angajat-Zbor)</h1>
+<p><a th:href="@{/assignments/new}">Adaugă Asignare Nouă</a></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID Asignare</th>
+        <th>ID Zbor (flightId)</th>
+        <th>ID Angajat (staffId)</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="asm : ${assignments}">
+        <td th:text="${asm.id}">ASM-ID</td>
+        <td th:text="${asm.flightId}">FL-ID</td>
+        <td th:text="${asm.staffId}">ST-ID</td>
+        <td>
+            <form th:action="@{/assignments/{id}/delete(id=${asm.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<hr>
+<p><a th:href="@{/flights}">Vezi Zboruri</a> | <a th:href="@{/staff}">Vezi Angajați</a></p>
+</body>
+</html>

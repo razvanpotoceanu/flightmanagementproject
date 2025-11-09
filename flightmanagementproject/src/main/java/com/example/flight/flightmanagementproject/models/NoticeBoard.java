@@ -15,6 +15,10 @@ public class NoticeBoard extends BaseEntity {
         this.flightsOfTheDay = flightsOfTheDay;
     }
 
+    public NoticeBoard() {
+
+    }
+
     // Getters and Setters
     public String getId() {
         return id;

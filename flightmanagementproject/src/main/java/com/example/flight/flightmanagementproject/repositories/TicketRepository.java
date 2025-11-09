@@ -4,7 +4,13 @@ import com.example.flight.flightmanagementproject.models.Ticket;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TicketRepository extends InMemoryRepository<Ticket, String> {
-    // Toată logica (save, findById, findAll, deleteById)
-    // este moștenită din InMemoryRepository.
+public class TicketRepository extends InFileRepository<Ticket, String> {
+
+    /**
+     * Constructorul apelează clasa părinte (InFileRepository)
+     * și îi spune ce fișier JSON să folosească și ce tip de clasă să citească.
+     */
+    public TicketRepository() {
+        super("data/tickets.json", Ticket.class);
+    }
 }

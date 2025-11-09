@@ -1,0 +1,72 @@
+[
+  {
+    "id": "pass-uuid-001",
+    "name": "Mihai Eminescu",
+    "currency": "RON",
+    "tickets": [],
+    "email": "mihai.eminescu@test.com"
+  },
+  {
+    "id": "pass-uuid-002",
+    "name": "Ion Creanga",
+    "currency": "RON",
+    "tickets": [],
+    "email": "ion.creanga@test.com"
+  },
+  {
+    "id": "pass-uuid-003",
+    "name": "Veronica Micle",
+    "currency": "EUR",
+    "tickets": [],
+    "email": "veronica.micle@test.com"
+  },
+  {
+    "id": "pass-uuid-004",
+    "name": "George Cosbuc",
+    "currency": "RON",
+    "tickets": [],
+    "email": "george.cosbuc@test.com"
+  },
+  {
+    "id": "pass-uuid-005",
+    "name": "Lucian Blaga",
+    "currency": "USD",
+    "tickets": [],
+    "email": "lucian.blaga@test.com"
+  },
+  {
+    "id": "pass-uuid-006",
+    "name": "Tudor Arghezi",
+    "currency": "RON",
+    "tickets": [],
+    "email": "tudor.arghezi@test.com"
+  },
+  {
+    "id": "pass-uuid-007",
+    "name": "Ana Blandiana",
+    "currency": "EUR",
+    "tickets": [],
+    "email": "ana.blandiana@test.com"
+  },
+  {
+    "id": "pass-uuid-008",
+    "name": "Nichita Stanescu",
+    "currency": "RON",
+    "tickets": [],
+    "email": "nichita.stanescu@test.com"
+  },
+  {
+    "id": "pass-uuid-009",
+    "name": "Marin Sorescu",
+    "currency": "RON",
+    "tickets": [],
+    "email": "marin.sorescu@test.com"
+  },
+  {
+    "id": "pass-uuid-010",
+    "name": "Mircea Eliade",
+    "currency": "USD",
+    "tickets": [],
+    "email": "mircea.eliade@test.com"
+  }
+]

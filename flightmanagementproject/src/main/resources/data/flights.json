@@ -1,0 +1,102 @@
+[
+  {
+    "id": "flight-uuid-001",
+    "flightNumber": "RO-201",
+    "departureTime": "08:00 AM",
+    "arrivalTime": "09:00 AM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-002",
+    "flightNumber": "WIZZ-404",
+    "departureTime": "10:30 AM",
+    "arrivalTime": "12:00 PM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-003",
+    "flightNumber": "RY-100",
+    "departureTime": "14:00 PM",
+    "arrivalTime": "15:30 PM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-004",
+    "flightNumber": "LH-123",
+    "departureTime": "07:00 AM",
+    "arrivalTime": "09:00 AM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-005",
+    "flightNumber": "AF-456",
+    "departureTime": "11:00 AM",
+    "arrivalTime": "13:00 PM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-006",
+    "flightNumber": "KLM-789",
+    "departureTime": "16:00 PM",
+    "arrivalTime": "18:00 PM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-007",
+    "flightNumber": "BA-234",
+    "departureTime": "09:30 AM",
+    "arrivalTime": "11:00 AM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-008",
+    "flightNumber": "RO-567",
+    "departureTime": "13:00 PM",
+    "arrivalTime": "14:00 PM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-009",
+    "flightNumber": "TK-890",
+    "departureTime": "19:00 PM",
+    "arrivalTime": "21:00 PM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  },
+  {
+    "id": "flight-uuid-010",
+    "flightNumber": "DL-345",
+    "departureTime": "22:00 PM",
+    "arrivalTime": "06:00 AM",
+    "noticeBoardId": null,
+    "airplaneId": null,
+    "tickets": [],
+    "flightAssignments": []
+  }
+]

@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista Avioane</title>
+    <style>
+        table, th, td { border: 1px solid black; padding: 5px; }
+        form { display: inline; }
+    </style>
 </head>
 <body>
-
 <h1>Lista tuturor Avioanelor</h1>
-
 <p><a th:href="@{/airplanes/new}">Adaugă Avion Nou</a></p>
 
 <table>
@@ -15,16 +17,22 @@
     <tr>
         <th>ID</th>
         <th>Model</th>
-        <th>Capacitate</th>
+        <th>Capacitate (Number)</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="airplane : ${airplanes}">
         <td th:text="${airplane.id}">ID Av.</td>
-        <td th:text="${airplane.modelName}">Model Av.</td>
+        <td>
+            <a th:href="@{/airplanes/{id}(id=${airplane.id})}" th:text="${airplane.modelName}">
+                Model Av.
+            </a>
+        </td>
         <td th:text="${airplane.number}">Cap. Av.</td>
         <td>
+            <a th:href="@{/airplanes/{id}/edit(id=${airplane.id})}">Edit</a>
+
             <form th:action="@{/airplanes/{id}/delete(id=${airplane.id})}" method="post">
                 <button type="submit">Delete</button>
             </form>
@@ -32,6 +40,7 @@
     </tr>
     </tbody>
 </table>
-
+<hr>
+<p><a th:href="@{/passengers}">Vezi Pasageri</a></p>
 </body>
 </html>

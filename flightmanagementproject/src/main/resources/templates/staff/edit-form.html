@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editează Angajat</title>
+</head>
+<body>
+<h1>Editează Angajat</h1>
+<form th:action="@{/staff/{id}/edit(id=${staff.id})}" th:object="${staff}" method="post">
+
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+    </div>
+    <br>
+
+    <div>
+        <label for="name">Nume Complet:</label>
+        <input type="text" id="name" th:field="*{name}" required>
+    </div>
+    <br>
+
+    <div>
+        <label for="employeeType">Tip Angajat:</label>
+        <select id="employeeType" th:field="*{employeeType}" required>
+            <option value="">Alege un tip...</option>
+            <option th:each="type : ${employeeTypes}"
+                    th:value="${type}"
+                    th:text="${type}">AIRLINE_EMPLOYEE</option>
+        </select>
+    </div>
+    <hr>
+
+    <div>
+        <label for="role">Rol (doar pt. Airline):</label>
+        <input type="text" id="role" th:field="*{role}">
+    </div>
+    <br>
+
+    <div>
+        <label for="department">Departament (doar pt. Airport):</label>
+        <input type="text" id="department" th:field="*{department}">
+    </div>
+    <br>
+    <div>
+        <label for="designation">Funcție (doar pt. Airport):</label>
+        <input type="text" id="designation" th:field="*{designation}">
+    </div>
+    <br>
+
+    <button type="submit">Actualizează Angajat</button>
+</form>
+<p><a th:href="@{/staff}">Anulează</a></p>
+</body>
+</html>

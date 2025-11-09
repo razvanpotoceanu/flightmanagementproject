@@ -1,9 +1,8 @@
 package com.example.flight.flightmanagementproject.controllers;
 
+import com.example.flight.flightmanagementproject.enums.EmployeeType;
 import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
-import com.example.flight.flightmanagementproject.models.AirlineEmployee; // Importăm subtipul
-import com.example.flight.flightmanagementproject.models.AirportEmployee; // Importăm subtipul
 import com.example.flight.flightmanagementproject.models.Staff;
 import com.example.flight.flightmanagementproject.services.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,56 +22,66 @@ public class StaffController {
         this.service = service;
     }
 
-    // 1. GET ALL (Rămâne la fel)
+    // 1. GET ALL
     @GetMapping
     public String getAllStaff(Model model) {
         model.addAttribute("staff", service.getAllStaff());
         return "staff/index";
     }
 
-    // --- SCHIMBARE PENTRU CREARE ---
-
-    // 2a. GET NEW (pentru AirlineEmployee)
-    @GetMapping("/new/airline")
-    public String showNewAirlineForm(Model model) {
-        model.addAttribute("airlineEmployee", new AirlineEmployee()); // Trimitem un obiect specific
-        return "staff/form-airline"; // Folosim un template nou
+    // 2. GET NEW (O singură rută)
+    @GetMapping("/new")
+    public String showNewStaffForm(Model model) {
+        model.addAttribute("staff", new Staff());
+        // Trimitem lista de tipuri (Enum) către formular
+        model.addAttribute("employeeTypes", EmployeeType.values());
+        return "staff/form"; // Folosim noul formular unificat
     }
 
-    // 2b. GET NEW (pentru AirportEmployee)
-    @GetMapping("/new/airport")
-    public String showNewAirportForm(Model model) {
-        model.addAttribute("airportEmployee", new AirportEmployee()); // Trimitem un obiect specific
-        return "staff/form-airport"; // Folosim un template nou
-    }
-
-    // ... (restul controller-ului) ...
-
-    // 3a. POST CREATE (pentru AirlineEmployee) - (Probabil deja corectat)
-    @PostMapping("/airline")
-    public RedirectView addAirlineEmployee(@ModelAttribute AirlineEmployee airlineEmployee) throws RepositoryException {
-        service.addStaff(airlineEmployee);
+    // 3. POST CREATE (O singură rută)
+    @PostMapping
+    public RedirectView addStaff(@ModelAttribute Staff staff) throws RepositoryException {
+        service.addStaff(staff);
         return new RedirectView("/staff");
     }
-
-    // 3b. POST CREATE (pentru AirportEmployee) - (MODIFICAT AICI)
-    @PostMapping("/airport")
-    public RedirectView addAirportEmployee(@ModelAttribute AirportEmployee airportEmployee) throws RepositoryException {
-        // Am scos blocul try...catch.
-        // Dacă 'addStaff' eșuează, vei vedea eroarea 500 în consolă.
-        service.addStaff(airportEmployee);
-
-        return new RedirectView("/staff");
-    }
-
-// ... (restul controller-ului) ...
 
     // 4. POST DELETE (Rămâne la fel)
     @PostMapping("/{id}/delete")
-    public RedirectView deleteStaff(@PathVariable String id) {
+    public RedirectView deleteStaff(@PathVariable String id) throws RepositoryException {
+        service.deleteStaff(id);
+        return new RedirectView("/staff");
+    }
+
+    // 5. GET DETAILS (Rămâne la fel, dar folosim noul template)
+    @GetMapping("/{id}")
+    public String getStaffDetails(@PathVariable String id, Model model) {
         try {
-            service.deleteStaff(id);
+            model.addAttribute("staff", service.getStaffById(id));
+            return "staff/details";
         } catch (ResourceNotFoundException e) {
+            return "redirect:/staff";
+        }
+    }
+
+    // 6. GET EDIT (O singură rută)
+    @GetMapping("/{id}/edit")
+    public String showEditStaffForm(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("staff", service.getStaffById(id));
+            // Trimitem lista de tipuri (Enum) către formular
+            model.addAttribute("employeeTypes", EmployeeType.values());
+            return "staff/edit-form"; // Folosim noul formular unificat
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/staff";
+        }
+    }
+
+    // 7. POST UPDATE (O singură rută)
+    @PostMapping("/{id}/edit")
+    public RedirectView updateStaff(@PathVariable String id, @ModelAttribute Staff staff) {
+        try {
+            service.updateStaff(id, staff);
+        } catch (RepositoryException e) {
             // Logare
         }
         return new RedirectView("/staff");

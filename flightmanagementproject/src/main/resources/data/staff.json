@@ -1,71 +1,91 @@
 [
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
     "id": "staff-uuid-001",
     "name": "Traian Vuia",
+    "employeeType": "AIRLINE_EMPLOYEE",
     "role": "Pilot",
-    "assignments": []
+    "assignments": [],
+    "designation": null,
+    "department": null
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
     "id": "staff-uuid-002",
     "name": "Aurel Vlaicu",
+    "employeeType": "AIRPORT_EMPLOYEE",
+    "role": null,
+    "assignments": [],
     "designation": "Șef Securitate",
     "department": "Securitate Aeroportuară"
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
     "id": "staff-uuid-003",
     "name": "Henri Coanda",
+    "employeeType": "AIRLINE_EMPLOYEE",
     "role": "Co-Pilot",
-    "assignments": []
+    "assignments": [],
+    "designation": null,
+    "department": null
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
     "id": "staff-uuid-004",
     "name": "Smaranda Braescu",
+    "employeeType": "AIRLINE_EMPLOYEE",
     "role": "Stewardesă Șefă",
-    "assignments": []
+    "assignments": [],
+    "designation": null,
+    "department": null
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
     "id": "staff-uuid-005",
     "name": "Elisa Leonida Zamfirescu",
+    "employeeType": "AIRPORT_EMPLOYEE",
+    "role": null,
+    "assignments": [],
     "designation": "Inginer Mentenanță",
     "department": "Mentenanță"
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
     "id": "staff-uuid-006",
     "name": "Victor Babes",
+    "employeeType": "AIRPORT_EMPLOYEE",
+    "role": null,
+    "assignments": [],
     "designation": "Control Trafic",
     "department": "Operațiuni"
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
     "id": "staff-uuid-007",
     "name": "Nadia Comaneci",
+    "employeeType": "AIRLINE_EMPLOYEE",
     "role": "Stewardesă",
-    "assignments": []
+    "assignments": [],
+    "designation": null,
+    "department": null
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirlineEmployee",
     "id": "staff-uuid-008",
     "name": "Gheorghe Hagi",
+    "employeeType": "AIRLINE_EMPLOYEE",
     "role": "Steward",
-    "assignments": []
+    "assignments": [],
+    "designation": null,
+    "department": null
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
     "id": "staff-uuid-009",
     "name": "Emil Racovita",
+    "employeeType": "AIRPORT_EMPLOYEE",
+    "role": null,
+    "assignments": [],
     "designation": "Personal Sol",
     "department": "Ground Handling"
   },
   {
-    "@class": "com.example.flight.flightmanagementproject.models.AirportEmployee",
     "id": "staff-uuid-010",
     "name": "Ana Aslan",
+    "employeeType": "AIRPORT_EMPLOYEE",
+    "role": null,
+    "assignments": [],
     "designation": "Medic Aeroport",
     "department": "Medical"
   }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Panou Zboruri</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; } </style>
+    <style> table, th, td { border: 1px solid black; padding: 5px; } form { display: inline; } </style>
 </head>
 <body>
 <h1>Panou de Afișaj Zboruri</h1>
@@ -20,10 +20,13 @@
     </thead>
     <tbody>
     <tr th:each="nb : ${noticeboards}">
-        <td th:text="${nb.id}">NB-ID</td>
+        <td>
+            <a th:href="@{/noticeboards/{id}(id=${nb.id})}" th:text="${nb.id}">NB-ID</a>
+        </td>
         <td th:text="${nb.date}">Data</td>
         <td th:text="${#lists.size(nb.flightsOfTheDay)}">0</td>
         <td>
+            <a th:href="@{/noticeboards/{id}/edit(id=${nb.id})}">Edit</a>
             <form th:action="@{/noticeboards/{id}/delete(id=${nb.id})}" method="post">
                 <button type="submit">Delete</button>
             </form>

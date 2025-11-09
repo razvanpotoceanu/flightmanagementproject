@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalii Avion</title>
+</head>
+<body>
+<h1>Detalii Avion</h1>
+<div>
+    <strong>ID:</strong>
+    <p th:text="${airplane.id}">ID-UL AICI</p>
+</div>
+<div>
+    <strong>Model:</strong>
+    <p th:text="${airplane.modelName}">MODEL AICI</p>
+</div>
+<div>
+    <strong>Capacitate (Number):</strong>
+    <p th:text="${airplane.number}">CAPACITATE AICI</p>
+</div>
+<div>
+    <strong>Nr. Zboruri (Listă):</strong>
+    <p th:text="${#lists.size(airplane.flights)}">0</p>
+</div>
+<hr>
+<p><a th:href="@{/airplanes}">Înapoi la Listă</a></p>
+</body>
+</html>

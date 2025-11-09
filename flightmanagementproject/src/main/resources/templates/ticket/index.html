@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Bilete</title>
+    <style> table, th, td { border: 1px solid black; padding: 5px; } form { display: inline; } </style>
+</head>
+<body>
+<h1>Lista tuturor Biletelor</h1>
+<p><a th:href="@{/tickets/new}">Adaugă Bilet Nou</a></p>
+<table>
+    <thead>
+    <tr>
+        <th>ID Bilet</th>
+        <th>Nr. Loc</th>
+        <th>Preț</th>
+        <th>ID Pasager</th>
+        <th>ID Zbor</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td>
+            <a th:href="@{/tickets/{id}(id=${ticket.id})}" th:text="${ticket.id}">ID Bilet</a>
+        </td>
+        <td th:text="${ticket.seatNumber}">Loc</td>
+        <td th:text="${ticket.price}">Preț</td>
+        <td th:text="${ticket.passengerId}">ID Pasager</td>
+        <td th:text="${ticket.flightId}">ID Zbor</td>
+        <td>
+            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}">Edit</a>
+            <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<hr>
+<p><a th:href="@{/passengers}">Vezi Pasageri</a> | <a th:href="@{/flights}">Vezi Zboruri</a></p>
+</body>
+</html>

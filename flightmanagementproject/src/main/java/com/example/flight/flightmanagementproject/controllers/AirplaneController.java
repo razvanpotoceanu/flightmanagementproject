@@ -72,4 +72,37 @@ public class AirplaneController {
 
     // Metodele vechi de GET/DELETE/{id} și POST (cu @RequestBody) au fost eliminate,
     // deoarece nu sunt cerute pentru interfața web simplă.
+// 5. GET DETAILS
+    @GetMapping("/{id}")
+    public String getAirplaneDetails(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("airplane", service.getAirplaneById(id));
+            return "airplane/details"; // Template nou
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/airplanes";
+        }
+    }
+
+    // 6. GET EDIT
+    @GetMapping("/{id}/edit")
+    public String showEditAirplaneForm(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("airplane", service.getAirplaneById(id));
+            return "airplane/edit-form"; // Template nou
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/airplanes";
+        }
+    }
+
+    // 7. POST UPDATE
+    @PostMapping("/{id}/edit")
+    public RedirectView updateAirplane(@PathVariable String id, @ModelAttribute Airplane airplane) {
+        try {
+            service.updateAirplane(id, airplane);
+        } catch (RepositoryException e) {
+            // Logare
+        }
+        return new RedirectView("/airplanes");
+    }
+
 }

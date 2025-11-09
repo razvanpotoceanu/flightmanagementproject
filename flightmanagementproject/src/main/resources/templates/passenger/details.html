@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalii Pasager</title>
+</head>
+<body>
+<h1>Detalii Pasager</h1>
+
+<div>
+    <strong>ID:</strong>
+    <p th:text="${passenger.id}">ID-UL AICI</p>
+</div>
+<div>
+    <strong>Nume:</strong>
+    <p th:text="${passenger.name}">NUMELE AICI</p>
+</div>
+<div>
+    <strong>Email:</strong>
+    <p th:text="${passenger.email}">EMAIL AICI</p>
+</div>
+<div>
+    <strong>Valută:</strong>
+    <p th:text="${passenger.currency}">VALUTA AICI</p>
+</div>
+<div>
+    <strong>Nr. Bilete (Listă):</strong>
+    <p th:text="${#lists.size(passenger.tickets)}">0</p>
+</div>
+
+<hr>
+<p><a th:href="@{/passengers}">Înapoi la Listă</a></p>
+</body>
+</html>

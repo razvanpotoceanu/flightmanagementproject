@@ -2,18 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Adaugă Bagaj</title>
+    <title>Editează Bagaj</title>
 </head>
 <body>
-<h1>Adaugă Bagaj Nou</h1>
-<form th:action="@{/luggage}" th:object="${luggage}" method="post">
-
+<h1>Editează Bagaj</h1>
+<form th:action="@{/luggage/{id}/edit(id=${luggage.id})}" th:object="${luggage}" method="post">
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+    </div>
+    <br>
     <div>
         <label for="ticketId">ID Bilet (Ticket ID):</label>
         <input type="text" id="ticketId" th:field="*{ticketId}" required>
     </div>
     <br>
-
     <div>
         <label for="status">Status:</label>
         <select id="status" th:field="*{status}" required>
@@ -24,9 +27,8 @@
         </select>
     </div>
     <br>
-
-    <button type="submit">Salvează Bagajul</button>
+    <button type="submit">Actualizează Bagajul</button>
 </form>
-<p><a th:href="@{/luggage}">Înapoi la Listă</a></p>
+<p><a th:href="@{/luggage}">Anulează</a></p>
 </body>
 </html>

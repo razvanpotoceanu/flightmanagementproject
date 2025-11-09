@@ -49,4 +49,41 @@ public class FlightAssignmentController {
         service.deleteFlightAssignment(id);
         return new RedirectView("/assignments");
     }
+    /*
+     * ########## METODE NOI PENTRU TEMA 3 ##########
+     */
+
+    // GET DETAILS
+    @GetMapping("/{id}")
+    public String getAssignmentDetails(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("assignment", service.getFlightAssignmentById(id));
+            return "assignment/details";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/assignments";
+        }
+    }
+
+    // GET EDIT
+    @GetMapping("/{id}/edit")
+    public String showEditAssignmentForm(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("assignment", service.getFlightAssignmentById(id));
+            return "assignment/edit-form";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/assignments";
+        }
+    }
+
+    // POST UPDATE
+    @PostMapping("/{id}/edit")
+    public RedirectView updateAssignment(@PathVariable String id, @ModelAttribute FlightAssignment assignment) {
+        try {
+            service.updateFlightAssignment(id, assignment);
+        } catch (RepositoryException e) {
+            // Logare
+        }
+        return new RedirectView("/assignments");
+    }
+
 }

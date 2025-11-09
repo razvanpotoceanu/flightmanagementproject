@@ -4,36 +4,35 @@
     <meta charset="UTF-8">
     <title>Lista Angajați</title>
     <style>
-        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+        table, th, td { border: 1px solid black; padding: 5px; }
+        form { display: inline; }
     </style>
 </head>
 <body>
 <h1>Lista tuturor Angajaților (Staff)</h1>
 
-<p>
-    <a th:href="@{/staff/new/airline}">Adaugă Angajat Companie Aeriană (Airline)</a>
-    |
-    <a th:href="@{/staff/new/airport}">Adaugă Angajat Aeroport (Airport)</a>
-</p>
+<p><a th:href="@{/staff/new}">Adaugă Angajat Nou</a></p>
 
-<hr>
 <table>
     <thead>
     <tr>
         <th>ID</th>
         <th>Nume Complet</th>
-        <th>Tip Angajat</th>
+        <th>Tip Angajat (Detalii)</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="member : ${staff}">
         <td th:text="${member.id}">ID Ang.</td>
-
-        <td th:text="${member.name}">Nume</td>
-
-        <td th:text="${member.getEmployeeType()}">Tip</td>
         <td>
+            <a th:href="@{/staff/{id}(id=${member.id})}" th:text="${member.name}">
+                Nume
+            </a>
+        </td>
+        <td th:text="${member.getEmployeeTypeDisplay()}">Tip</td>
+        <td>
+            <a th:href="@{/staff/{id}/edit(id=${member.id})}">Edit</a>
             <form th:action="@{/staff/{id}/delete(id=${member.id})}" method="post">
                 <button type="submit">Delete</button>
             </form>
@@ -41,6 +40,5 @@
     </tr>
     </tbody>
 </table>
-
 </body>
 </html>

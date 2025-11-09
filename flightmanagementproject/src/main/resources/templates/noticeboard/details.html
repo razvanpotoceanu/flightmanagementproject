@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalii Panou</title>
+</head>
+<body>
+<h1>Detalii Panou</h1>
+<div>
+    <strong>ID:</strong>
+    <p th:text="${noticeboard.id}">ID PANOU</p>
+</div>
+<div>
+    <strong>Data:</strong>
+    <p th:text="${noticeboard.date}">DATA</p>
+</div>
+<div>
+    <strong>Nr. Zboruri pe Panou:</strong>
+    <p th:text="${#lists.size(noticeboard.flightsOfTheDay)}">0</p>
+</div>
+<hr>
+<p><a th:href="@{/noticeboards}">Înapoi la Listă</a></p>
+</body>
+</html>

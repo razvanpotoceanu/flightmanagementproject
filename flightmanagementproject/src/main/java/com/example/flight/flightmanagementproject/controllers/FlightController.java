@@ -49,4 +49,41 @@ public class FlightController {
 
         return new RedirectView("/flights");
     }
+
+    /*
+     * ########## METODE NOI PENTRU TEMA 3 ##########
+     */
+
+    // 5. GET DETAILS
+    @GetMapping("/{id}")
+    public String getFlightDetails(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("flight", service.getFlightById(id));
+            return "flight/details"; // Template nou
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/flights";
+        }
+    }
+
+    // 6. GET EDIT
+    @GetMapping("/{id}/edit")
+    public String showEditFlightForm(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("flight", service.getFlightById(id));
+            return "flight/edit-form"; // Template nou
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/flights";
+        }
+    }
+
+    // 7. POST UPDATE
+    @PostMapping("/{id}/edit")
+    public RedirectView updateFlight(@PathVariable String id, @ModelAttribute Flight flight) {
+        try {
+            service.updateFlight(id, flight);
+        } catch (RepositoryException e) {
+            // Logare
+        }
+        return new RedirectView("/flights");
+    }
 }

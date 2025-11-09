@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalii Zbor</title>
+</head>
+<body>
+<h1>Detalii Zbor</h1>
+<div>
+    <strong>ID:</strong>
+    <p th:text="${flight.id}">ID-UL AICI</p>
+</div>
+<div>
+    <strong>Nr. Zbor:</strong>
+    <p th:text="${flight.flightNumber}">NR ZBOR AICI</p>
+</div>
+<div>
+    <strong>Ora Plecare:</strong>
+    <p th:text="${flight.departureTime}">ORA P AICI</p>
+</div>
+<div>
+    <strong>Ora Sosire:</strong>
+    <p th:text="${flight.arrivalTime}">ORA S AICI</p>
+</div>
+<div>
+    <strong>ID Avion:</strong>
+    <p th:text="${flight.airplaneId}">ID AVION AICI</p>
+</div>
+<div>
+    <strong>ID Panou:</strong>
+    <p th:text="${flight.noticeBoardId}">ID PANOU AICI</p>
+</div>
+<div>
+    <strong>Nr. Bilete Vândute:</strong>
+    <p th:text="${#lists.size(flight.tickets)}">0</p>
+</div>
+<div>
+    <strong>Nr. Angajați Asignați:</strong>
+    <p th:text="${#lists.size(flight.flightAssignments)}">0</p>
+</div>
+<hr>
+<p><a th:href="@{/flights}">Înapoi la Listă</a></p>
+</body>
+</html>

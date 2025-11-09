@@ -45,4 +45,39 @@ public class NoticeBoardController {
         service.deleteNoticeBoard(id);
         return new RedirectView("/noticeboards");
     }
+
+    /*
+     * ########## METODE NOI PENTRU TEMA 3 ##########
+     */
+
+    @GetMapping("/{id}")
+    public String getNoticeBoardDetails(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("noticeboard", service.getNoticeBoardById(id));
+            return "noticeboard/details";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/noticeboards";
+        }
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditNoticeBoardForm(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("noticeboard", service.getNoticeBoardById(id));
+            return "noticeboard/edit-form";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/noticeboards";
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public RedirectView updateNoticeBoard(@PathVariable String id, @ModelAttribute NoticeBoard noticeBoard) {
+        try {
+            service.updateNoticeBoard(id, noticeBoard);
+        } catch (RepositoryException e) {
+            // Logare
+        }
+        return new RedirectView("/noticeboards");
+    }
+
 }

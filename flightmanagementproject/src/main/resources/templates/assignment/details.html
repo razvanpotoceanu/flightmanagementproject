@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalii Asignare</title>
+</head>
+<body>
+<h1>Detalii Asignare</h1>
+<div>
+    <strong>ID Asignare:</strong>
+    <p th:text="${assignment.id}">ID ASM</p>
+</div>
+<div>
+    <strong>ID Zbor:</strong>
+    <p th:text="${assignment.flightId}">ID Zbor</p>
+</div>
+<div>
+    <strong>ID Angajat:</strong>
+    <p th:text="${assignment.staffId}">ID Angajat</p>
+</div>
+<hr>
+<p><a th:href="@{/assignments}">Înapoi la Listă</a></p>
+</body>
+</html>

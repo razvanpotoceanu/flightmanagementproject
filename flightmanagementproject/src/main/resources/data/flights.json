@@ -5,7 +5,7 @@
     "departureTime": "08:00 AM",
     "arrivalTime": "09:00 AM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-001",
     "tickets": [],
     "flightAssignments": []
   },
@@ -15,7 +15,7 @@
     "departureTime": "10:30 AM",
     "arrivalTime": "12:00 PM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-002",
     "tickets": [],
     "flightAssignments": []
   },
@@ -25,7 +25,7 @@
     "departureTime": "14:00 PM",
     "arrivalTime": "15:30 PM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-003",
     "tickets": [],
     "flightAssignments": []
   },
@@ -35,7 +35,7 @@
     "departureTime": "07:00 AM",
     "arrivalTime": "09:00 AM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-004",
     "tickets": [],
     "flightAssignments": []
   },
@@ -45,7 +45,7 @@
     "departureTime": "11:00 AM",
     "arrivalTime": "13:00 PM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-005",
     "tickets": [],
     "flightAssignments": []
   },
@@ -55,7 +55,7 @@
     "departureTime": "16:00 PM",
     "arrivalTime": "18:00 PM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-006",
     "tickets": [],
     "flightAssignments": []
   },
@@ -65,7 +65,7 @@
     "departureTime": "09:30 AM",
     "arrivalTime": "11:00 AM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-007",
     "tickets": [],
     "flightAssignments": []
   },
@@ -75,7 +75,7 @@
     "departureTime": "13:00 PM",
     "arrivalTime": "14:00 PM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-008",
     "tickets": [],
     "flightAssignments": []
   },
@@ -85,7 +85,7 @@
     "departureTime": "19:00 PM",
     "arrivalTime": "21:00 PM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-009",
     "tickets": [],
     "flightAssignments": []
   },
@@ -95,7 +95,7 @@
     "departureTime": "22:00 PM",
     "arrivalTime": "06:00 AM",
     "noticeBoardId": null,
-    "airplaneId": null,
+    "airplaneId": "plane-uuid-010",
     "tickets": [],
     "flightAssignments": []
   }

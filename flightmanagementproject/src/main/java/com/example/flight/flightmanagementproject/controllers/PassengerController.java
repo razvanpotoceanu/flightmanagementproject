@@ -1,5 +1,6 @@
 package com.example.flight.flightmanagementproject.controllers;
 
+import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Passenger;
 import com.example.flight.flightmanagementproject.services.PassengerService;
@@ -68,4 +69,45 @@ public class PassengerController {
 
     // Metodele vechi GET /{id} și DELETE /{id} (din API-ul REST) sunt eliminate
     // deoarece nu sunt necesare pentru interfața web simplă cerută.
+
+
+
+    /**
+     * 5. GET DETAILS: Afișează pagina de detalii.
+     */
+    @GetMapping("/{id}")
+    public String getPassengerDetails(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("passenger", service.getPassengerById(id));
+            return "passenger/details"; // Template nou: details.html
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/passengers";
+        }
+    }
+
+    /**
+     * 6. GET EDIT: Afișează formularul de editare pre-completat.
+     */
+    @GetMapping("/{id}/edit")
+    public String showEditPassengerForm(@PathVariable String id, Model model) {
+        try {
+            model.addAttribute("passenger", service.getPassengerById(id));
+            return "passenger/edit-form"; // Template nou: edit-form.html
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/passengers";
+        }
+    }
+
+    /**
+     * 7. POST UPDATE: Procesează formularul de editare.
+     */
+    @PostMapping("/{id}/edit")
+    public RedirectView updatePassenger(@PathVariable String id, @ModelAttribute Passenger passenger) {
+        try {
+            service.updatePassenger(id, passenger);
+        } catch (RepositoryException e) {
+            // Logare
+        }
+        return new RedirectView("/passengers");
+    }
 }

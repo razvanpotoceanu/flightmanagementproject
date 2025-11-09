@@ -2,8 +2,6 @@ package com.example.flight.flightmanagementproject.services;
 
 import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
-import com.example.flight.flightmanagementproject.models.AirlineEmployee;
-import com.example.flight.flightmanagementproject.models.AirportEmployee;
 import com.example.flight.flightmanagementproject.models.Staff;
 import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID; // Asigură-te că ai acest import
+import java.util.UUID;
 
 @Service
 public class StaffService {
@@ -24,22 +22,25 @@ public class StaffService {
         this.staffRepository = staffRepository;
     }
 
-    // Metodă generică pentru adăugarea oricărui tip de Staff
+    // Metoda 'addStaff' este acum mai simplă
     public Staff addStaff(Staff staff) throws RepositoryException {
-
-        // VERIFICAREA CRITICĂ: Generează ID-ul dacă lipsește
         if (staff.getId() == null || staff.getId().isEmpty()) {
             staff.setId(UUID.randomUUID().toString());
         }
 
-        // Inițializăm listele specifice dacă e cazul (codul tău era corect aici)
-        if (staff instanceof AirlineEmployee) {
-            AirlineEmployee ae = (AirlineEmployee) staff;
-            if (ae.getAssignments() == null) {
-                ae.setAssignments(new ArrayList<>());
-            }
+        // Inițializăm lista de asignări dacă este null (doar pt Airline)
+        if (staff.getAssignments() == null) {
+            staff.setAssignments(new ArrayList<>());
         }
 
+        return staffRepository.save(staff);
+    }
+
+    public Staff updateStaff(String id, Staff staff) throws RepositoryException {
+        staff.setId(id);
+        if (staff.getAssignments() == null) {
+            staff.setAssignments(new ArrayList<>());
+        }
         return staffRepository.save(staff);
     }
 
@@ -58,21 +59,4 @@ public class StaffService {
         }
         staffRepository.deleteById(id);
     }
-
-    public Staff updateStaff(String id, Staff staff) throws RepositoryException {
-        // Setăm ID-ul din URL
-        staff.setId(id);
-
-        // Inițializăm listele specifice doar dacă este AirlineEmployee
-        if (staff instanceof AirlineEmployee) {
-            AirlineEmployee ae = (AirlineEmployee) staff;
-            if (ae.getAssignments() == null) {
-                ae.setAssignments(new ArrayList<>());
-            }
-        }
-
-        return staffRepository.save(staff);
-    }
-
-
 }

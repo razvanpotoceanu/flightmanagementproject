@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editează Pasager</title>
+</head>
+<body>
+<h1>Editează Pasager</h1>
+
+<form th:action="@{/passengers/{id}/edit(id=${passenger.id})}" th:object="${passenger}" method="post">
+
+    <div>
+        <label>ID (Nu se poate schimba):</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+    </div>
+    <br>
+    <div>
+        <label for="name">Nume Complet:</label>
+        <input type="text" id="name" th:field="*{name}" required>
+    </div>
+    <br>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}">
+    </div>
+    <br>
+    <div>
+        <label for="currency">Valută:</label>
+        <input type="text" id="currency" th:field="*{currency}">
+    </div>
+    <br>
+    <button type="submit">Actualizează Pasager</button>
+</form>
+<p><a th:href="@{/passengers}">Anulează (Înapoi la Listă)</a></p>
+</body>
+</html>

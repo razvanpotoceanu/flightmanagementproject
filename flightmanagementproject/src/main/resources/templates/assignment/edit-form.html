@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editează Asignare</title>
+</head>
+<body>
+<h1>Editează Asignare</h1>
+<form th:action="@{/assignments/{id}/edit(id=${assignment.id})}" th:object="${assignment}" method="post">
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+    </div>
+    <br>
+    <div>
+        <label for="flightId">ID Zbor (Flight ID):</label>
+        <input type="text" id="flightId" th:field="*{flightId}" required>
+    </div>
+    <br>
+    <div>
+        <label for="staffId">ID Angajat (Staff ID):</label>
+        <input type="text" id="staffId" th:field="*{staffId}" required>
+    </div>
+    <br>
+    <button type="submit">Actualizează Asignarea</button>
+</form>
+<p><a th:href="@{/assignments}">Anulează</a></p>
+</body>
+</html>

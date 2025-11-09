@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalii Bilet</title>
+</head>
+<body>
+<h1>Detalii Bilet</h1>
+<div>
+    <strong>ID:</strong>
+    <p th:text="${ticket.id}">ID Bilet</p>
+</div>
+<div>
+    <strong>ID Pasager:</strong>
+    <p th:text="${ticket.passengerId}">ID Pasager</p>
+</div>
+<div>
+    <strong>ID Zbor:</strong>
+    <p th:text="${ticket.flightId}">ID Zbor</p>
+</div>
+<div>
+    <strong>Preț:</strong>
+    <p th:text="${ticket.price}">Preț</p>
+</div>
+<div>
+    <strong>Nr. Loc:</strong>
+    <p th:text="${ticket.seatNumber}">Loc</p>
+</div>
+<div>
+    <strong>Nr. Bagaje (Listă):</strong>
+    <p th:text="${#lists.size(ticket.luggages)}">0</p>
+</div>
+<hr>
+<p><a th:href="@{/tickets}">Înapoi la Listă</a></p>
+</body>
+</html>

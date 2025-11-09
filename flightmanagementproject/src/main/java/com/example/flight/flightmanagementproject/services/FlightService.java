@@ -52,4 +52,20 @@ public class FlightService {
         }
         flightRepository.deleteById(id);
     }
+
+
+    public Flight updateFlight(String id, Flight flight) throws RepositoryException {
+        // Setăm ID-ul din URL
+        flight.setId(id);
+
+        // Inițializăm ambele liste dacă sunt null
+        if (flight.getTickets() == null) {
+            flight.setTickets(new ArrayList<>());
+        }
+        if (flight.getFlightAssignments() == null) {
+            flight.setFlightAssignments(new ArrayList<>());
+        }
+
+        return flightRepository.save(flight);
+    }
 }

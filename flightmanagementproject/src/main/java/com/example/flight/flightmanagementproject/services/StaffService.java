@@ -58,4 +58,21 @@ public class StaffService {
         }
         staffRepository.deleteById(id);
     }
+
+    public Staff updateStaff(String id, Staff staff) throws RepositoryException {
+        // Setăm ID-ul din URL
+        staff.setId(id);
+
+        // Inițializăm listele specifice doar dacă este AirlineEmployee
+        if (staff instanceof AirlineEmployee) {
+            AirlineEmployee ae = (AirlineEmployee) staff;
+            if (ae.getAssignments() == null) {
+                ae.setAssignments(new ArrayList<>());
+            }
+        }
+
+        return staffRepository.save(staff);
+    }
+
+
 }

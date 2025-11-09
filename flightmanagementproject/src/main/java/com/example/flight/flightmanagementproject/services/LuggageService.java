@@ -43,4 +43,13 @@ public class LuggageService {
         }
         luggageRepository.deleteById(id);
     }
+    public Luggage updateLuggage(String id, Luggage luggage) throws RepositoryException {
+        // Setăm ID-ul din URL
+        luggage.setId(id);
+
+        // Această clasă nu are liste de inițializat
+
+        return luggageRepository.save(luggage);
+    }
+
 }

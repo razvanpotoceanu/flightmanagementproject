@@ -51,4 +51,19 @@ public class PassengerService {
         Passenger passenger = getPassengerById(id); // Aruncă excepție dacă nu există
         passengerRepository.deleteById(passenger.getId());
     }
+    public Passenger updatePassenger(String id, Passenger passenger) throws RepositoryException {
+        // Setăm ID-ul din URL
+        passenger.setId(id);
+
+        // Ne asigurăm că lista de bilete nu devine null la actualizare
+        if (passenger.getTickets() == null) {
+            passenger.setTickets(new ArrayList<>());
+        }
+
+        return passengerRepository.save(passenger);
+    }
+
+
+
+
 }

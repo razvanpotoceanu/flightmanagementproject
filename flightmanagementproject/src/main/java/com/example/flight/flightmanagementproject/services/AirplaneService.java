@@ -51,4 +51,18 @@ public class AirplaneService {
         }
         airplaneRepository.deleteById(id);
     }
+
+    public Airplane updateAirplane(String id, Airplane airplane) throws RepositoryException {
+        // Setăm ID-ul din URL pentru a asigura consistența
+        airplane.setId(id);
+
+        // Ne asigurăm că lista de zboruri nu devine null la actualizare
+        if (airplane.getFlights() == null) {
+            airplane.setFlights(new ArrayList<>());
+        }
+
+        // Apelul 'save' va suprascrie înregistrarea existentă în JSON
+        return airplaneRepository.save(airplane);
+    }
+
 }

@@ -48,4 +48,17 @@ public class NoticeBoardService {
         }
         noticeBoardRepository.deleteById(id);
     }
+    public NoticeBoard updateNoticeBoard(String id, NoticeBoard noticeBoard) throws RepositoryException {
+        // Setăm ID-ul din URL
+        noticeBoard.setId(id);
+
+        // Ne asigurăm că lista de zboruri nu devine null la actualizare
+        if (noticeBoard.getFlightsOfTheDay() == null) {
+            noticeBoard.setFlightsOfTheDay(new ArrayList<>());
+        }
+
+        return noticeBoardRepository.save(noticeBoard);
+    }
+
+
 }

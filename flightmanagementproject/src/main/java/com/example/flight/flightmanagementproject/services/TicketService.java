@@ -48,4 +48,17 @@ public class TicketService {
         }
         ticketRepository.deleteById(id);
     }
+    public Ticket updateTicket(String id, Ticket ticket) throws RepositoryException {
+        // Setăm ID-ul din URL
+        ticket.setId(id);
+
+        // Ne asigurăm că lista de bagaje nu devine null la actualizare
+        if (ticket.getLuggages() == null) {
+            ticket.setLuggages(new ArrayList<>());
+        }
+
+        return ticketRepository.save(ticket);
+    }
+
+
 }

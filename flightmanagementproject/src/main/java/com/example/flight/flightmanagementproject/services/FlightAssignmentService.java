@@ -43,4 +43,14 @@ public class FlightAssignmentService {
         }
         assignmentRepository.deleteById(id);
     }
+    public FlightAssignment updateFlightAssignment(String id, FlightAssignment assignment) throws RepositoryException {
+        // Setăm ID-ul din URL
+        assignment.setId(id);
+
+        // Această clasă nu are liste de inițializat
+
+        return assignmentRepository.save(assignment);
+    }
+
+
 }

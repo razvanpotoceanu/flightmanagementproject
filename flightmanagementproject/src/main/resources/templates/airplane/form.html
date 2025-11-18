@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
 <head>
-    <meta charset="UTF-8">
     <title>Adaugă Avion</title>
+    <style>.error { color: red; }</style>
 </head>
 <body>
-
-<h1>Adaugă un Avion Nou</h1>
-
+<h1>Adaugă Avion</h1>
 <form th:action="@{/airplanes}" th:object="${airplane}" method="post">
 
     <div>
-        <label for="modelName">Model:</label>               <input type="text" id="modelName" th:field="*{modelName}" required> </div>
-
+        <label>Model:</label>
+        <input type="text" th:field="*{modelName}">
+        <div class="error" th:if="${#fields.hasErrors('modelName')}" th:errors="*{modelName}"></div>
+    </div>
     <br>
 
     <div>
-        <label for="number">Capacitate:</label>             <input type="number" id="number" th:field="*{number}" required>     </div>
-
+        <label>Capacitate:</label>
+        <!-- Folosim 'capacity' -->
+        <input type="number" th:field="*{capacity}">
+        <div class="error" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
+    </div>
     <br>
 
-    <button type="submit">Salvează Avion</button>
+    <button type="submit">Salvează</button>
 </form>
-
+<a th:href="@{/airplanes}">Înapoi</a>
 </body>
 </html>

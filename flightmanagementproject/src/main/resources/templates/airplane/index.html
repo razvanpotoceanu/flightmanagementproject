@@ -1,46 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Lista Avioane</title>
-    <style>
-        table, th, td { border: 1px solid black; padding: 5px; }
-        form { display: inline; }
-    </style>
+    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style>
 </head>
 <body>
-<h1>Lista tuturor Avioanelor</h1>
-<p><a th:href="@{/airplanes/new}">Adaugă Avion Nou</a></p>
+<h1>Lista Avioane</h1>
+<a th:href="@{/airplanes/new}">Adaugă Nou</a>
 
 <table>
     <thead>
     <tr>
         <th>ID</th>
         <th>Model</th>
-        <th>Capacitate (Number)</th>
+        <th>Capacitate</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="airplane : ${airplanes}">
-        <td th:text="${airplane.id}">ID Av.</td>
+    <tr th:each="plane : ${airplanes}">
+        <td th:text="${plane.id}"></td>
         <td>
-            <a th:href="@{/airplanes/{id}(id=${airplane.id})}" th:text="${airplane.modelName}">
-                Model Av.
-            </a>
+            <a th:href="@{/airplanes/{id}(id=${plane.id})}" th:text="${plane.modelName}"></a>
         </td>
-        <td th:text="${airplane.number}">Cap. Av.</td>
+        <!-- AICI ERA EROAREA: Folosim 'capacity', nu 'number' -->
+        <td th:text="${plane.capacity}"></td>
         <td>
-            <a th:href="@{/airplanes/{id}/edit(id=${airplane.id})}">Edit</a>
-
-            <form th:action="@{/airplanes/{id}/delete(id=${airplane.id})}" method="post">
+            <a th:href="@{/airplanes/{id}/edit(id=${plane.id})}">Edit</a>
+            <form th:action="@{/airplanes/{id}/delete(id=${plane.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<hr>
-<p><a th:href="@{/passengers}">Vezi Pasageri</a></p>
+<p><a th:href="@{/flights}">Vezi Zboruri</a></p>
 </body>
 </html>

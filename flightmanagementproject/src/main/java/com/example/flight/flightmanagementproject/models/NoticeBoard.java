@@ -1,46 +1,30 @@
 package com.example.flight.flightmanagementproject.models;
 
-import java.time.LocalDate; // Import corect pentru dată
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "notice_boards")
 public class NoticeBoard extends BaseEntity {
-    private String id;
-    private LocalDate date; // CORECȚIE (Pct. 7)
-    private List<Flight> flightsOfTheDay;
 
-    // Constructor
-    public NoticeBoard(String id, LocalDate date, List<Flight> flightsOfTheDay) {
-        this.id = id;
-        this.date = date;
-        this.flightsOfTheDay = flightsOfTheDay;
-    }
+    @NotNull(message = "Data este obligatorie")
+    private LocalDate date;
 
-    public NoticeBoard() {
+    // Un panou afișează mai multe zboruri
+    @OneToMany(mappedBy = "noticeBoard")
+    private List<Flight> flightsOfTheDay = new ArrayList<>();
 
-    }
+    public NoticeBoard() {}
 
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
+    public NoticeBoard(LocalDate date) {
         this.date = date;
     }
 
-    public List<Flight> getFlightsOfTheDay() {
-        return flightsOfTheDay;
-    }
-
-    public void setFlightsOfTheDay(List<Flight> flightsOfTheDay) {
-        this.flightsOfTheDay = flightsOfTheDay;
-    }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
+    public List<Flight> getFlightsOfTheDay() { return flightsOfTheDay; }
+    public void setFlightsOfTheDay(List<Flight> flightsOfTheDay) { this.flightsOfTheDay = flightsOfTheDay; }
 }

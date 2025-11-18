@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Adaugă Angajat</title></head>
+<head>
+    <title>Adaugă Angajat</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
+</head>
 <body>
 <h1>Adaugă Angajat Aeroport</h1>
+
 <form th:action="@{/airport-employees}" th:object="${employee}" method="post">
-    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
-    <label>Departament: <input type="text" th:field="*{department}" required></label><br><br>
-    <label>Funcție: <input type="text" th:field="*{designation}" required></label><br><br>
+
+    <div>
+        <label>Nume:</label>
+        <input type="text" th:field="*{name}">
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+    <br>
+
+    <div>
+        <label>Funcție (Designation):</label>
+        <input type="text" th:field="*{designation}">
+        <div class="error" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></div>
+    </div>
+    <br>
+
+    <div>
+        <label>Departament:</label>
+        <input type="text" th:field="*{department}">
+        <div class="error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></div>
+    </div>
+    <br>
+
     <button type="submit">Salvează</button>
 </form>
-</body></html>
+
+<p><a th:href="@{/airport-employees}">Înapoi</a></p>
+</body>
+</html>

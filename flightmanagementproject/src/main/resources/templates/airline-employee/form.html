@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Adaugă Angajat</title></head>
+<head>
+    <title>Adaugă Angajat</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
+</head>
 <body>
 <h1>Adaugă Angajat Companie</h1>
+
 <form th:action="@{/airline-employees}" th:object="${employee}" method="post">
-    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
-    <label>Rol:
+
+    <div>
+        <label>Nume:</label>
+        <input type="text" th:field="*{name}">
+        <!-- ADAUGAT: Afișarea erorii de validare -->
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Eroare Nume</div>
+    </div>
+    <br>
+
+    <div>
+        <label>Rol:</label>
         <select th:field="*{role}">
+            <option value="">Alege...</option>
             <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
         </select>
-    </label><br><br>
+        <div class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Eroare Rol</div>
+    </div>
+    <br>
+
     <button type="submit">Salvează</button>
 </form>
-</body></html>
+
+<p><a th:href="@{/airline-employees}">Înapoi</a></p>
+</body>
+</html>

@@ -1,43 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Lista Bilete</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; } form { display: inline; } </style>
+    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style>
 </head>
 <body>
-<h1>Lista tuturor Biletelor</h1>
+<h1>Lista Bilete</h1>
 <p><a th:href="@{/tickets/new}">Adaugă Bilet Nou</a></p>
+
 <table>
     <thead>
     <tr>
-        <th>ID Bilet</th>
-        <th>Nr. Loc</th>
+        <th>ID</th>
+        <th>Loc</th>
         <th>Preț</th>
-        <th>ID Pasager</th>
-        <th>ID Zbor</th>
+        <th>Pasager</th>
+        <th>Zbor</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.id}"></td>
+        <td th:text="${ticket.seatNumber}"></td>
+        <td th:text="${ticket.price}"></td>
+
+        <!-- Navigare prin obiecte -->
+        <td th:text="${ticket.passenger != null ? ticket.passenger.name : '-'}"></td>
+        <td th:text="${ticket.flight != null ? ticket.flight.flightNumber : '-'}"></td>
+
         <td>
-            <a th:href="@{/tickets/{id}(id=${ticket.id})}" th:text="${ticket.id}">ID Bilet</a>
-        </td>
-        <td th:text="${ticket.seatNumber}">Loc</td>
-        <td th:text="${ticket.price}">Preț</td>
-        <td th:text="${ticket.passengerId}">ID Pasager</td>
-        <td th:text="${ticket.flightId}">ID Zbor</td>
-        <td>
-            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}">Edit</a>
-            <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post">
+            <a th:href="@{/tickets/{id}(id=${ticket.id})}">Detalii</a> |
+            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}">Edit</a> |
+            <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<hr>
-<p><a th:href="@{/passengers}">Vezi Pasageri</a> | <a th:href="@{/flights}">Vezi Zboruri</a></p>
+<p><a th:href="@{/flights}">Înapoi la Zboruri</a></p>
 </body>
 </html>

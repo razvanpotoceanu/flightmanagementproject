@@ -1,66 +1,49 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Passenger;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
-// Importăm implementarea specifică, dar o folosim ca interfață
 import com.example.flight.flightmanagementproject.repositories.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PassengerService {
 
-    // Folosim interfața generică, nu implementarea specifică
-    private final AbstractRepository<Passenger, String> passengerRepository;
+    private final PassengerRepository repository;
 
     @Autowired
-    public PassengerService(PassengerRepository passengerRepository) {
-        this.passengerRepository = passengerRepository;
+    public PassengerService(PassengerRepository repository) {
+        this.repository = repository;
     }
 
     public List<Passenger> getAllPassengers() {
-        return passengerRepository.findAll();
+        return repository.findAll();
     }
 
-    public Passenger getPassengerById(String id) throws ResourceNotFoundException {
-        return passengerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Passenger with id " + id + " not found."));
+    public Passenger getPassengerById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Passenger not found with id: " + id));
     }
 
-    // Am schimbat metoda ta de "create"
-    public Passenger addPassenger(Passenger passenger) {
-        // Logica de business: ne asigurăm că are un ID nou
-        if (passenger.getId() == null || passenger.getId().isEmpty()) {
-            passenger.setId(UUID.randomUUID().toString());
+    // Metoda de salvare nu mai returnează void, poate returna entitatea salvată
+    public Passenger savePassenger(Passenger passenger) {
+        // Nu generăm ID, MySQL o face (Auto Increment)
+        return repository.save(passenger);
+    }
+
+    public Passenger updatePassenger(Long id, Passenger updatedPassenger) {
+        Passenger existing = getPassengerById(id);
+        existing.setName(updatedPassenger.getName());
+        existing.setEmail(updatedPassenger.getEmail());
+        existing.setCurrency(updatedPassenger.getCurrency());
+        return repository.save(existing);
+    }
+
+    public void deletePassenger(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Passenger not found with id: " + id);
         }
-        // Inițializăm listele goale dacă sunt null, pentru a evita NullPointerException
-        if (passenger.getTickets() == null) {
-            passenger.setTickets(new ArrayList<>());
-        }
-
-        return passengerRepository.save(passenger);
-    }
-
-    public void deletePassenger(String id) {
-        // Verificăm dacă există înainte de a șterge
-        Passenger passenger = getPassengerById(id); // Aruncă excepție dacă nu există
-        passengerRepository.deleteById(passenger.getId());
-    }
-    public Passenger updatePassenger(String id, Passenger passenger) throws RepositoryException {
-        // Setăm ID-ul din URL
-        passenger.setId(id);
-
-        // Ne asigurăm că lista de bilete nu devine null la actualizare
-        if (passenger.getTickets() == null) {
-            passenger.setTickets(new ArrayList<>());
-        }
-
-        return passengerRepository.save(passenger);
+        repository.deleteById(id);
     }
 }

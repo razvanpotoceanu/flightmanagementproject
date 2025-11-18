@@ -1,64 +1,51 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Ticket;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
+import com.example.flight.flightmanagementproject.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TicketService {
 
-    private final AbstractRepository<Ticket, String> ticketRepository;
+    private final TicketRepository repository;
 
     @Autowired
-    public TicketService(@Qualifier("ticketRepository") AbstractRepository<Ticket, String> ticketRepository) {
-        this.ticketRepository = ticketRepository;
-    }
-
-    public Ticket addTicket(Ticket ticket) throws RepositoryException {
-        if (ticket.getId() == null || ticket.getId().isEmpty()) {
-            ticket.setId(UUID.randomUUID().toString());
-        }
-        // Inițializăm lista de bagaje dacă este null
-        if (ticket.getLuggages() == null) {
-            ticket.setLuggages(new ArrayList<>());
-        }
-        return ticketRepository.save(ticket);
+    public TicketService(TicketRepository repository) {
+        this.repository = repository;
     }
 
     public List<Ticket> getAllTickets() {
-        return ticketRepository.findAll();
+        return repository.findAll();
     }
 
-    public Ticket getTicketById(String id) throws ResourceNotFoundException {
-        return ticketRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ticket with id " + id + " not found."));
+    public Ticket getTicketById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with id: " + id));
     }
 
-    public void deleteTicket(String id) throws RepositoryException {
-        if (!ticketRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Ticket with id " + id + " not found.");
+    public void saveTicket(Ticket ticket) {
+        repository.save(ticket);
+    }
+
+    public void updateTicket(Long id, Ticket updatedTicket) {
+        Ticket existing = getTicketById(id);
+
+        existing.setPrice(updatedTicket.getPrice());
+        existing.setSeatNumber(updatedTicket.getSeatNumber());
+        existing.setPassenger(updatedTicket.getPassenger());
+        existing.setFlight(updatedTicket.getFlight());
+
+        repository.save(existing);
+    }
+
+    public void deleteTicket(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Ticket not found with id: " + id);
         }
-        ticketRepository.deleteById(id);
+        repository.deleteById(id);
     }
-    public Ticket updateTicket(String id, Ticket ticket) throws RepositoryException {
-        // Setăm ID-ul din URL
-        ticket.setId(id);
-
-        // Ne asigurăm că lista de bagaje nu devine null la actualizare
-        if (ticket.getLuggages() == null) {
-            ticket.setLuggages(new ArrayList<>());
-        }
-
-        return ticketRepository.save(ticket);
-    }
-
-
 }

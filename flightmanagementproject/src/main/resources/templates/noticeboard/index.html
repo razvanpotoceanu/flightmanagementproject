@@ -1,38 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Panou Zboruri</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; } form { display: inline; } </style>
-</head>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head><title>Panouri</title>
+    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style></head>
 <body>
-<h1>Panou de Afișaj Zboruri</h1>
-<p><a th:href="@{/noticeboards/new}">Adaugă Panou Nou (pe o dată)</a></p>
-
+<h1>Panouri de Afișaj</h1>
+<p><a th:href="@{/noticeboards/new}">Adaugă Panou</a></p>
 <table>
-    <thead>
-    <tr>
-        <th>ID Panou</th>
-        <th>Data (LocalDate)</th>
-        <th>Nr. Zboruri (Listă)</th>
-        <th>Acțiuni</th>
-    </tr>
-    </thead>
+    <thead><tr><th>ID</th><th>Data</th><th>Acțiuni</th></tr></thead>
     <tbody>
     <tr th:each="nb : ${noticeboards}">
-        <td>
-            <a th:href="@{/noticeboards/{id}(id=${nb.id})}" th:text="${nb.id}">NB-ID</a>
-        </td>
-        <td th:text="${nb.date}">Data</td>
-        <td th:text="${#lists.size(nb.flightsOfTheDay)}">0</td>
+        <td th:text="${nb.id}"></td>
+        <td th:text="${nb.date}"></td>
         <td>
             <a th:href="@{/noticeboards/{id}/edit(id=${nb.id})}">Edit</a>
-            <form th:action="@{/noticeboards/{id}/delete(id=${nb.id})}" method="post">
+            <form th:action="@{/noticeboards/{id}/delete(id=${nb.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-</body>
-</html>
+</body></html>

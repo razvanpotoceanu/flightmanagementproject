@@ -1,40 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista Asignări Zboruri</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; } form { display: inline; } </style>
-</head>
+<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head><title>Asignări</title>
+    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style></head>
 <body>
-<h1>Lista Asignări (Angajat-Zbor)</h1>
-<p><a th:href="@{/assignments/new}">Adaugă Asignare Nouă</a></p>
+<h1>Asignări Zboruri (Staff)</h1>
+<p><a th:href="@{/assignments/new}">Adaugă Asignare</a></p>
 
 <table>
     <thead>
     <tr>
-        <th>ID Asignare</th>
-        <th>ID Zbor (flightId)</th>
-        <th>ID Angajat (staffId)</th>
+        <th>ID</th>
+        <th>Zbor</th>
+        <th>Angajat</th>
+        <th>Tip Angajat</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="asm : ${assignments}">
+    <tr th:each="a : ${assignments}">
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.flight != null ? a.flight.flightNumber : '-'}"></td>
+
+        <!-- Afișare condițională în funcție de cine e asignat -->
+        <td th:if="${a.airlineEmployee != null}" th:text="${a.airlineEmployee.name}"></td>
+        <td th:if="${a.airportEmployee != null}" th:text="${a.airportEmployee.name}"></td>
+        <td th:if="${a.airlineEmployee == null and a.airportEmployee == null}">-</td>
+
+        <td th:if="${a.airlineEmployee != null}">Companie (Airline)</td>
+        <td th:if="${a.airportEmployee != null}">Aeroport</td>
+        <td th:if="${a.airlineEmployee == null and a.airportEmployee == null}">-</td>
+
         <td>
-            <a th:href="@{/assignments/{id}(id=${asm.id})}" th:text="${asm.id}">ASM-ID</a>
-        </td>
-        <td th:text="${asm.flightId}">FL-ID</td>
-        <td th:text="${asm.staffId}">ST-ID</td>
-        <td>
-            <a th:href="@{/assignments/{id}/edit(id=${asm.id})}">Edit</a>
-            <form th:action="@{/assignments/{id}/delete(id=${asm.id})}" method="post">
+            <form th:action="@{/assignments/{id}/delete(id=${a.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<hr>
-<p><a th:href="@{/flights}">Vezi Zboruri</a> | <a th:href="@{/staff}">Vezi Angajați</a></p>
 </body>
 </html>

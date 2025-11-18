@@ -1,16 +1,15 @@
 package com.example.flight.flightmanagementproject.controllers;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
-import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Passenger;
 import com.example.flight.flightmanagementproject.services.PassengerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller; // SCHIMBARE 1: Folosim @Controller
-import org.springframework.ui.Model;             // Adaugă importul pentru Model
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView; // Adaugă importul pentru RedirectView
 
-@Controller // SCHIMBARE 1: Trebuie să fie @Controller pentru a returna nume de template-uri
+@Controller
 @RequestMapping("/passengers")
 public class PassengerController {
 
@@ -21,93 +20,47 @@ public class PassengerController {
         this.service = service;
     }
 
-    // 1. GET ALL: Afișează lista de pasageri (index.html)
-    // Ruta: GET /passengers
     @GetMapping
-    // SCHIMBARE 2: Returnează String (nume template) și ia ca parametru Model
-    public String getAllPassengers(Model model) {
+    public String list(Model model) {
         model.addAttribute("passengers", service.getAllPassengers());
-        // Returnează calea către templates/passenger/index.html
         return "passenger/index";
     }
 
-    // 2. GET NEW: Afișează formularul de creare (form.html)
-    // Ruta: GET /passengers/new
     @GetMapping("/new")
-    public String showNewPassengerForm(Model model) {
-        // Punem un obiect 'Passenger' gol pentru a mapa câmpurile din formular
+    public String showAddForm(Model model) {
         model.addAttribute("passenger", new Passenger());
-        // Returnează calea către templates/passenger/form.html
         return "passenger/form";
     }
 
-    // 3. POST CREATE: Procesează formularul și salvează
-    // Ruta: POST /passengers (Se folosește @ModelAttribute în loc de @RequestBody)
     @PostMapping
-    public RedirectView addPassenger(@ModelAttribute Passenger passenger) {
-        try {
-            service.addPassenger(passenger);
-        } catch (Exception e) {
-            // Tratare simplă
+    // @Valid declanșează validarea. BindingResult colectează erorile.
+    public String addPassenger(@Valid @ModelAttribute Passenger passenger, BindingResult result) {
+        if (result.hasErrors()) {
+            // Dacă sunt erori de validare, reafișăm formularul (cu erori)
+            return "passenger/form";
         }
-        // Redirecționează utilizatorul înapoi la lista actualizată
-        return new RedirectView("/passengers");
+        service.savePassenger(passenger);
+        return "redirect:/passengers";
     }
 
-    // 4. POST DELETE: Șterge un pasager după ID (cerința cere POST pentru ștergere)
-    // Ruta: POST /passengers/{id}/delete
-    @PostMapping("/{id}/delete")
-    public RedirectView deletePassenger(@PathVariable String id) {
-        try {
-            service.deletePassenger(id);
-        } catch (ResourceNotFoundException e) {
-            // Tratare simplă
-        }
-        // Redirecționează utilizatorul înapoi la lista actualizată
-        return new RedirectView("/passengers");
-    }
-
-    // Metodele vechi GET /{id} și DELETE /{id} (din API-ul REST) sunt eliminate
-    // deoarece nu sunt necesare pentru interfața web simplă cerută.
-
-
-
-    /**
-     * 5. GET DETAILS: Afișează pagina de detalii.
-     */
-    @GetMapping("/{id}")
-    public String getPassengerDetails(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("passenger", service.getPassengerById(id));
-            return "passenger/details"; // Template nou: details.html
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/passengers";
-        }
-    }
-
-    /**
-     * 6. GET EDIT: Afișează formularul de editare pre-completat.
-     */
     @GetMapping("/{id}/edit")
-    public String showEditPassengerForm(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("passenger", service.getPassengerById(id));
-            return "passenger/edit-form"; // Template nou: edit-form.html
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/passengers";
-        }
+    public String showEditForm(@PathVariable Long id, Model model) {
+        model.addAttribute("passenger", service.getPassengerById(id));
+        return "passenger/edit-form";
     }
 
-    /**
-     * 7. POST UPDATE: Procesează formularul de editare.
-     */
     @PostMapping("/{id}/edit")
-    public RedirectView updatePassenger(@PathVariable String id, @ModelAttribute Passenger passenger) {
-        try {
-            service.updatePassenger(id, passenger);
-        } catch (RepositoryException e) {
-            // Logare
+    public String updatePassenger(@PathVariable Long id, @Valid @ModelAttribute Passenger passenger, BindingResult result) {
+        if (result.hasErrors()) {
+            return "passenger/edit-form";
         }
-        return new RedirectView("/passengers");
+        service.updatePassenger(id, passenger);
+        return "redirect:/passengers";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deletePassenger(@PathVariable Long id) {
+        service.deletePassenger(id);
+        return "redirect:/passengers";
     }
 }

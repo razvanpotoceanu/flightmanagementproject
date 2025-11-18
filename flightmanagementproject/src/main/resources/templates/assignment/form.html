@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Adaugă Asignare</title>
-</head>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head><title>Adaugă Asignare</title></head>
 <body>
 <h1>Adaugă Asignare Nouă</h1>
 <form th:action="@{/assignments}" th:object="${assignment}" method="post">
 
-    <div>
-        <label for="flightId">ID Zbor (Flight ID):</label>
-        <input type="text" id="flightId" th:field="*{flightId}" required>
-    </div>
+    <label>Zbor:</label>
+    <select th:field="*{flight}">
+        <option value="">Alege Zbor...</option>
+        <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+    </select>
+    <br><br>
+
+    <h3>Selectează UN SINGUR tip de angajat:</h3>
+
+    <label>Angajat Companie:</label>
+    <select th:field="*{airlineEmployee}">
+        <option value="">- Nimeni -</option>
+        <option th:each="e : ${airlineEmployees}" th:value="${e.id}" th:text="${e.name + ' (' + e.role + ')'}"></option>
+    </select>
     <br>
-    <div>
-        <label for="staffId">ID Angajat (Staff ID):</label>
-        <input type="text" id="staffId" th:field="*{staffId}" required>
-    </div>
-    <br>
-    <button type="submit">Salvează Asignarea</button>
+
+    <p>-- SAU --</p>
+
+    <label>Angajat Aeroport:</label>
+    <select th:field="*{airportEmployee}">
+        <option value="">- Nimeni -</option>
+        <option th:each="e : ${airportEmployees}" th:value="${e.id}" th:text="${e.name}"></option>
+    </select>
+    <br><br>
+
+    <button type="submit">Salvează</button>
 </form>
-<p><a th:href="@{/assignments}">Înapoi la Listă</a></p>
 </body>
 </html>

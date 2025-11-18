@@ -1,33 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Angajați Companie Aeriană</title>
-    <style>table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; }</style>
-</head>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head><title>Angajați Companie</title></head>
 <body>
 <h1>Angajați Companie Aeriană</h1>
-<p><a th:href="@{/airline-employees/new}">Adaugă Nou</a></p>
-
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nume</th>
-        <th>Rol</th>
-        <th>Acțiuni</th>
-    </tr>
-    </thead>
+<a th:href="@{/airline-employees/new}">Adaugă Nou</a>
+<table border="1">
+    <thead><tr><th>ID</th><th>Nume</th><th>Rol</th><th>Acțiuni</th></tr></thead>
     <tbody>
     <tr th:each="emp : ${employees}">
         <td th:text="${emp.id}"></td>
-        <td>
-            <a th:href="@{/airline-employees/{id}(id=${emp.id})}" th:text="${emp.name}">Nume</a>
-        </td>
+        <td><a th:href="@{/airline-employees/{id}(id=${emp.id})}" th:text="${emp.name}"></a></td>
         <td th:text="${emp.role}"></td>
         <td>
             <a th:href="@{/airline-employees/{id}/edit(id=${emp.id})}">Edit</a>
-
             <form th:action="@{/airline-employees/{id}/delete(id=${emp.id})}" method="post" style="display:inline">
                 <button type="submit">Delete</button>
             </form>
@@ -35,6 +20,4 @@
     </tr>
     </tbody>
 </table>
-<p><a th:href="@{/airport-employees}">Vezi Angajați Aeroport</a></p>
-</body>
-</html>
+</body></html>

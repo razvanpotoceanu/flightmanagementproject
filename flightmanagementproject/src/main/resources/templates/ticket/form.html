@@ -1,34 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
 <head>
-    <meta charset="UTF-8">
     <title>Adaugă Bilet</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
 </head>
 <body>
-<h1>Adaugă Bilet Nou</h1>
+<h1>Adaugă Bilet</h1>
 <form th:action="@{/tickets}" th:object="${ticket}" method="post">
+
     <div>
-        <label for="passengerId">ID Pasager:</label>
-        <input type="text" id="passengerId" th:field="*{passengerId}" required>
+        <label>Loc:</label>
+        <input type="text" th:field="*{seatNumber}">
+        <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div>
     </div>
     <br>
     <div>
-        <label for="flightId">ID Zbor:</label>
-        <input type="text" id="flightId" th:field="*{flightId}" required>
+        <label>Preț:</label>
+        <input type="number" step="0.01" th:field="*{price}">
+        <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
     </div>
     <br>
     <div>
-        <label for="price">Preț:</label>
-        <input type="number" step="0.01" id="price" th:field="*{price}" required>
+        <label>Pasager:</label>
+        <select th:field="*{passenger}">
+            <option value="">-- Alege Pasager --</option>
+            <option th:each="p : ${passengers}" th:value="${p.id}" th:text="${p.name}"></option>
+        </select>
     </div>
     <br>
     <div>
-        <label for="seatNumber">Nr. Loc:</label>
-        <input type="text" id="seatNumber" th:field="*{seatNumber}" required>
+        <label>Zbor:</label>
+        <select th:field="*{flight}">
+            <option value="">-- Alege Zbor --</option>
+            <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+        </select>
     </div>
     <br>
-    <button type="submit">Salvează Bilet</button>
+    <button type="submit">Salvează</button>
 </form>
-<p><a th:href="@{/tickets}">Înapoi la Listă</a></p>
 </body>
 </html>

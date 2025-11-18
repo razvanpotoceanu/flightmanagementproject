@@ -1,41 +1,57 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
 <head>
     <meta charset="UTF-8">
     <title>Adaugă Zbor</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
 </head>
 <body>
 <h1>Adaugă un Zbor Nou</h1>
 <form th:action="@{/flights}" th:object="${flight}" method="post">
 
     <div>
-        <label for="flightNumber">Număr Zbor:</label>
-        <input type="text" id="flightNumber" th:field="*{flightNumber}" required>
+        <label>Număr Zbor:</label>
+        <input type="text" th:field="*{flightNumber}">
+        <div class="error" th:if="${#fields.hasErrors('flightNumber')}" th:errors="*{flightNumber}"></div>
     </div>
     <br>
     <div>
-        <label for="departureTime">Ora Plecare (String):</label>
-        <input type="text" id="departureTime" th:field="*{departureTime}" required>
+        <label>Ora Plecare:</label>
+        <input type="text" th:field="*{departureTime}">
+        <div class="error" th:if="${#fields.hasErrors('departureTime')}" th:errors="*{departureTime}"></div>
     </div>
     <br>
     <div>
-        <label for="arrivalTime">Ora Sosire (String):</label>
-        <input type="text" id="arrivalTime" th:field="*{arrivalTime}" required>
+        <label>Ora Sosire:</label>
+        <input type="text" th:field="*{arrivalTime}">
+        <div class="error" th:if="${#fields.hasErrors('arrivalTime')}" th:errors="*{arrivalTime}"></div>
     </div>
     <br>
     <div>
-        <label for="airplaneId">ID Avion (Airplane ID):</label>
-        <input type="text" id="airplaneId" th:field="*{airplaneId}">
+        <label>Avion:</label>
+        <!-- Dropdown pentru obiectul Airplane -->
+        <select th:field="*{airplane}">
+            <option value="">-- Alege Avion --</option>
+            <option th:each="plane : ${airplanes}"
+                    th:value="${plane.id}"
+                    th:text="${plane.modelName + ' (Cap: ' + plane.capacity + ')'}">
+            </option>
+        </select>
     </div>
     <br>
     <div>
-        <label for="noticeBoardId">ID Panou (NoticeBoard ID):</label>
-        <input type="text" id="noticeBoardId" th:field="*{noticeBoardId}">
+        <label>Panou (NoticeBoard):</label>
+        <select th:field="*{noticeBoard}">
+            <option value="">-- Alege Panou --</option>
+            <option th:each="nb : ${noticeBoards}"
+                    th:value="${nb.id}"
+                    th:text="${'Panou din: ' + nb.date}">
+            </option>
+        </select>
     </div>
     <br>
-
     <button type="submit">Salvează Zbor</button>
 </form>
-<p><a th:href="@{/flights}">Înapoi la Listă</a></p>
+<p><a th:href="@{/flights}">Înapoi</a></p>
 </body>
 </html>

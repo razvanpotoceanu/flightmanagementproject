@@ -1,55 +1,47 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Luggage;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
+import com.example.flight.flightmanagementproject.repositories.LuggageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class LuggageService {
 
-    private final AbstractRepository<Luggage, String> luggageRepository;
+    private final LuggageRepository repository;
 
     @Autowired
-    public LuggageService(@Qualifier("luggageRepository") AbstractRepository<Luggage, String> luggageRepository) {
-        this.luggageRepository = luggageRepository;
-    }
-
-    public Luggage addLuggage(Luggage luggage) throws RepositoryException {
-        if (luggage.getId() == null || luggage.getId().isEmpty()) {
-            luggage.setId(UUID.randomUUID().toString());
-        }
-        return luggageRepository.save(luggage);
+    public LuggageService(LuggageRepository repository) {
+        this.repository = repository;
     }
 
     public List<Luggage> getAllLuggages() {
-        return luggageRepository.findAll();
+        return repository.findAll();
     }
 
-    public Luggage getLuggageById(String id) throws ResourceNotFoundException {
-        return luggageRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Luggage with id " + id + " not found."));
+    public Luggage getLuggageById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Luggage not found with id: " + id));
     }
 
-    public void deleteLuggage(String id) throws RepositoryException {
-        if (!luggageRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Luggage with id " + id + " not found.");
+    public void saveLuggage(Luggage luggage) {
+        repository.save(luggage);
+    }
+
+    public void updateLuggage(Long id, Luggage updatedLuggage) {
+        Luggage existing = getLuggageById(id);
+        existing.setTicket(updatedLuggage.getTicket());
+        existing.setStatus(updatedLuggage.getStatus());
+        repository.save(existing);
+    }
+
+    public void deleteLuggage(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Luggage not found with id: " + id);
         }
-        luggageRepository.deleteById(id);
+        repository.deleteById(id);
     }
-    public Luggage updateLuggage(String id, Luggage luggage) throws RepositoryException {
-        // Setăm ID-ul din URL
-        luggage.setId(id);
-
-        // Această clasă nu are liste de inițializat
-
-        return luggageRepository.save(luggage);
-    }
-
 }

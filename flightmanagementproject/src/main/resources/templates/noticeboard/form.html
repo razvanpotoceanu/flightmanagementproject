@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Adaugă Panou</title>
-</head>
+<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head><title>Adaugă Panou</title></head>
 <body>
-<h1>Adaugă Panou Nou</h1>
+<h1>Adaugă Panou</h1>
 <form th:action="@{/noticeboards}" th:object="${noticeboard}" method="post">
-
-    <div>
-        <label for="date">Data Panoului:</label>
-        <input type="date" id="date" th:field="*{date}" required>
-    </div>
-    <br>
-
-    <button type="submit">Salvează Panoul</button>
+    <label>Data:</label>
+    <input type="date" th:field="*{date}" required>
+    <br><br>
+    <button type="submit">Salvează</button>
 </form>
-<p><a th:href="@{/noticeboards}">Înapoi la Listă</a></p>
-</body>
-</html>
+</body></html>

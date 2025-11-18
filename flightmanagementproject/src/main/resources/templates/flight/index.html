@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Lista Zboruri</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; } form { display: inline; } </style>
+    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style>
 </head>
 <body>
 <h1>Lista tuturor Zborurilor</h1>
@@ -17,24 +17,26 @@
         <th>Ora Plecare</th>
         <th>Ora Sosire</th>
         <th>ID Avion</th>
+        <th>ID Panou</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="flight : ${flights}">
-        <td th:text="${flight.id}">ID Zbor</td>
+        <td th:text="${flight.id}">ID</td>
         <td>
-            <a th:href="@{/flights/{id}(id=${flight.id})}" th:text="${flight.flightNumber}">
-                Nr. Zbor
-            </a>
+            <a th:href="@{/flights/{id}(id=${flight.id})}" th:text="${flight.flightNumber}">Nr. Zbor</a>
         </td>
-        <td th:text="${flight.departureTime}">Ora Plecare</td>
-        <td th:text="${flight.arrivalTime}">Ora Sosire</td>
-        <td th:text="${flight.airplaneId}">ID Avion</td>
+        <td th:text="${flight.departureTime}">Plecare</td>
+        <td th:text="${flight.arrivalTime}">Sosire</td>
+
+        <!-- Aici e corecția pentru JPA: Navigăm prin obiect, cu verificare de null -->
+        <td th:text="${flight.airplane != null ? flight.airplane.id : '-'}">Fără Avion</td>
+        <td th:text="${flight.noticeBoard != null ? flight.noticeBoard.id : '-'}">Fără Panou</td>
+
         <td>
             <a th:href="@{/flights/{id}/edit(id=${flight.id})}">Edit</a>
-
-            <form th:action="@{/flights/{id}/delete(id=${flight.id})}" method="post">
+            <form th:action="@{/flights/{id}/delete(id=${flight.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
@@ -42,6 +44,14 @@
     </tbody>
 </table>
 <hr>
-<p><a th:href="@{/passengers}">Vezi Pasageri</a> | <a th:href="@{/airplanes}">Vezi Avioane</a></p>
+<p>
+    <a th:href="@{/passengers}">Pasageri</a> |
+    <a th:href="@{/airplanes}">Avioane</a> |
+    <a th:href="@{/tickets}">Bilete</a> |
+    <a th:href="@{/luggage}">Bagaje</a> |
+    <a th:href="@{/assignments}">Asignări</a> |
+    <a th:href="@{/airline-employees}">Staff Companie</a> |
+    <a th:href="@{/airport-employees}">Staff Aeroport</a>
+</p>
 </body>
 </html>

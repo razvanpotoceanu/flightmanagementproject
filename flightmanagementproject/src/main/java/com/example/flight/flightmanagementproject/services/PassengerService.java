@@ -63,8 +63,4 @@ public class PassengerService {
 
         return passengerRepository.save(passenger);
     }
-
-
-
-
 }

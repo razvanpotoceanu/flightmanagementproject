@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Editează Angajat</title></head>
+<body>
+<h1>Editează Angajat</h1>
+<form th:action="@{/airline-employees/{id}/edit(id=${employee.id})}" th:object="${employee}" method="post">
+    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
+    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
+    <label>Rol:
+        <select th:field="*{role}">
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+        </select>
+    </label><br><br>
+    <button type="submit">Actualizează</button>
+</form>
+<a th:href="@{/airline-employees}">Anulează</a>
+</body>
+</html>

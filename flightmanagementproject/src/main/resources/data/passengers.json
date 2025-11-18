@@ -5,12 +5,6 @@
   "tickets" : [ ],
   "email" : "mihai.eminescu@test.com"
 }, {
-  "id" : "pass-uuid-002",
-  "name" : "Ion Creanga",
-  "currency" : "RON",
-  "tickets" : [ ],
-  "email" : "ion.creanga@test.com"
-}, {
   "id" : "pass-uuid-003",
   "name" : "Veronica Micle",
   "currency" : "EUR",
@@ -60,7 +54,7 @@
   "email" : "mircea.eliade@test.com"
 }, {
   "id" : "4639031c-cee1-4757-b86f-810fa52ff4e0",
-  "name" : "Razvan Potoceanu",
+  "name" : "Alin Potoceanu",
   "currency" : "Ron",
   "tickets" : [ ],
   "email" : "razvanpotoceanu4@gmail.com"

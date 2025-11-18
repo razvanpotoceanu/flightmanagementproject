@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Adaugă Angajat</title></head>
+<body>
+<h1>Adaugă Angajat Aeroport</h1>
+<form th:action="@{/airport-employees}" th:object="${employee}" method="post">
+    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
+    <label>Departament: <input type="text" th:field="*{department}" required></label><br><br>
+    <label>Funcție: <input type="text" th:field="*{designation}" required></label><br><br>
+    <button type="submit">Salvează</button>
+</form>
+</body></html>

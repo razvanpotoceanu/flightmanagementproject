@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Adaugă Angajat</title></head>
+<body>
+<h1>Adaugă Angajat Companie</h1>
+<form th:action="@{/airline-employees}" th:object="${employee}" method="post">
+    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
+    <label>Rol:
+        <select th:field="*{role}">
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+        </select>
+    </label><br><br>
+    <button type="submit">Salvează</button>
+</form>
+</body></html>

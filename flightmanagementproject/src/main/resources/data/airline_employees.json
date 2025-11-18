@@ -1,0 +1,51 @@
+[ {
+  "id" : "air-emp-003",
+  "name" : "Smaranda Braescu",
+  "role" : "CHIEF_PURSER",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-004",
+  "name" : "Nadia Comaneci",
+  "role" : "FLIGHT_ATTENDANT",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-005",
+  "name" : "Gheorghe Hagi",
+  "role" : "FLIGHT_ATTENDANT",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-006",
+  "name" : "Ion Tiriac",
+  "role" : "PILOT",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-007",
+  "name" : "Simona Halep",
+  "role" : "FLIGHT_ATTENDANT",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-008",
+  "name" : "Ilie Nastase",
+  "role" : "CO_PILOT",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-009",
+  "name" : "Maria Tanase",
+  "role" : "CHIEF_PURSER",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-010",
+  "name" : "George Enescu",
+  "role" : "GROUND_CREW",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-001",
+  "name" : "Traian Vuia",
+  "role" : "CO_PILOT",
+  "assignments" : [ ]
+}, {
+  "id" : "air-emp-002",
+  "name" : "Henri Coanda",
+  "role" : "FLIGHT_ATTENDANT",
+  "assignments" : [ ]
+} ]

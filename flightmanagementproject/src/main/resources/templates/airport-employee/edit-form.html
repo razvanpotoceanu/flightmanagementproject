@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Editează Angajat</title></head>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head><title>Editează Angajat</title><style>.error{color:red}</style></head>
 <body>
-<h1>Editează Angajat</h1>
+<h1>Editează Angajat Aeroport</h1>
 <form th:action="@{/airport-employees/{id}/edit(id=${employee.id})}" th:object="${employee}" method="post">
-    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
-    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
-    <label>Departament: <input type="text" th:field="*{department}" required></label><br><br>
-    <label>Funcție: <input type="text" th:field="*{designation}" required></label><br><br>
+    <label>Nume:</label>
+    <input type="text" th:field="*{name}">
+    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    <br>
+    <label>Funcție:</label>
+    <input type="text" th:field="*{designation}">
+    <br>
+    <label>Departament:</label>
+    <input type="text" th:field="*{department}">
+    <br>
     <button type="submit">Actualizează</button>
 </form>
-<a th:href="@{/airport-employees}">Anulează</a>
-</body>
-</html>
+</body></html>

@@ -1,20 +1,20 @@
 package com.example.flight.flightmanagementproject.models;
 
-// O clasă de bază pentru a ne asigura că toate entitățile au un ID
-public abstract class BaseEntity {
-    private String id;
+import jakarta.persistence.*;
+import java.io.Serializable;
 
-    public BaseEntity() {} // Constructor gol necesar
+@MappedSuperclass // Spune JPA că aceasta este o clasă părinte pentru entități
+public abstract class BaseEntity implements Serializable {
 
-    public BaseEntity(String id) {
-        this.id = id;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID Auto-incrementat de MySQL
+    private Long id;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

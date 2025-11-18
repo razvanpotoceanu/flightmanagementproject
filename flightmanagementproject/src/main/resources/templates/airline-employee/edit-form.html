@@ -1,18 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Editează Angajat</title></head>
+<head>
+    <title>Editează Angajat</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
+</head>
 <body>
-<h1>Editează Angajat</h1>
+<h1>Editează Angajat Companie</h1>
+
 <form th:action="@{/airline-employees/{id}/edit(id=${employee.id})}" th:object="${employee}" method="post">
-    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
-    <label>Nume: <input type="text" th:field="*{name}" required></label><br><br>
-    <label>Rol:
+
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+    </div>
+    <br>
+
+    <div>
+        <label>Nume:</label>
+        <input type="text" th:field="*{name}">
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+    <br>
+
+    <div>
+        <label>Rol:</label>
         <select th:field="*{role}">
             <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
         </select>
-    </label><br><br>
+        <div class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+    </div>
+    <br>
+
     <button type="submit">Actualizează</button>
 </form>
-<a th:href="@{/airline-employees}">Anulează</a>
+
+<p><a th:href="@{/airline-employees}">Anulează</a></p>
 </body>
 </html>

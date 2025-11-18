@@ -1,29 +1,77 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Editează Asignare</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        label { display: inline-block; width: 150px; font-weight: bold; }
+        .group { margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9; }
+        button { padding: 5px 10px; cursor: pointer; }
+        .error { color: red; font-size: 0.9em; }
+    </style>
 </head>
 <body>
 <h1>Editează Asignare</h1>
+
+<!-- Formularul trimite datele la ruta POST de update -->
 <form th:action="@{/assignments/{id}/edit(id=${assignment.id})}" th:object="${assignment}" method="post">
-    <div>
-        <label>ID:</label>
-        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+
+    <!-- ID-ul Asignării (ReadOnly) -->
+    <div class="group">
+        <label>ID Asignare:</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee; width: 300px;">
     </div>
-    <br>
-    <div>
-        <label for="flightId">ID Zbor (Flight ID):</label>
-        <input type="text" id="flightId" th:field="*{flightId}" required>
+
+    <!-- Selectare Zbor -->
+    <div class="group">
+        <label for="flight">Zbor:</label>
+        <select id="flight" th:field="*{flight}" required>
+            <option value="">Alege Zborul...</option>
+            <option th:each="f : ${flights}"
+                    th:value="${f.id}"
+                    th:text="${f.flightNumber + ' (' + f.departureTime + ')'}">
+                RO-201
+            </option>
+        </select>
+        <div class="error" th:if="${#fields.hasErrors('flight')}" th:errors="*{flight}"></div>
     </div>
-    <br>
-    <div>
-        <label for="staffId">ID Angajat (Staff ID):</label>
-        <input type="text" id="staffId" th:field="*{staffId}" required>
+
+    <h3>Alege Angajatul (Selectează UNUL singur):</h3>
+    <p style="font-size: 0.9em; color: #666;">Dacă schimbi tipul de angajat, asigură-te că celălalt câmp este setat pe "- Nimeni -".</p>
+
+    <!-- Selectare Angajat Companie -->
+    <div class="group">
+        <label for="airlineEmployee">Angajat Companie:</label>
+        <select id="airlineEmployee" th:field="*{airlineEmployee}">
+            <option value="">- Nimeni -</option>
+            <option th:each="e : ${airlineEmployees}"
+                    th:value="${e.id}"
+                    th:text="${e.name + ' (' + e.role + ')'}">
+                Nume (Rol)
+            </option>
+        </select>
     </div>
+
+    <div style="text-align: center; font-weight: bold; margin: 5px;">-- SAU --</div>
+
+    <!-- Selectare Angajat Aeroport -->
+    <div class="group">
+        <label for="airportEmployee">Angajat Aeroport:</label>
+        <select id="airportEmployee" th:field="*{airportEmployee}">
+            <option value="">- Nimeni -</option>
+            <option th:each="e : ${airportEmployees}"
+                    th:value="${e.id}"
+                    th:text="${e.name + ' (' + e.designation + ')'}">
+                Nume (Funcție)
+            </option>
+        </select>
+    </div>
+
     <br>
     <button type="submit">Actualizează Asignarea</button>
 </form>
-<p><a th:href="@{/assignments}">Anulează</a></p>
+
+<p><a th:href="@{/assignments}">Anulează (Înapoi la Listă)</a></p>
 </body>
 </html>

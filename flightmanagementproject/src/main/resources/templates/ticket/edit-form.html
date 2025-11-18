@@ -1,39 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Editează Bilet</title>
-</head>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head><title>Editează Bilet</title><style>.error{color:red}</style></head>
 <body>
 <h1>Editează Bilet</h1>
 <form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" th:object="${ticket}" method="post">
-    <div>
-        <label>ID:</label>
-        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
-    </div>
-    <br>
-    <div>
-        <label for="passengerId">ID Pasager:</label>
-        <input type="text" id="passengerId" th:field="*{passengerId}" required>
-    </div>
-    <br>
-    <div>
-        <label for="flightId">ID Zbor:</label>
-        <input type="text" id="flightId" th:field="*{flightId}" required>
-    </div>
-    <br>
-    <div>
-        <label for="price">Preț:</label>
-        <input type="number" step="0.01" id="price" th:field="*{price}" required>
-    </div>
-    <br>
-    <div>
-        <label for="seatNumber">Nr. Loc:</label>
-        <input type="text" id="seatNumber" th:field="*{seatNumber}" required>
-    </div>
-    <br>
-    <button type="submit">Actualizează Bilet</button>
+    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
+
+    <label>Loc: <input type="text" th:field="*{seatNumber}"></label>
+    <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div><br>
+
+    <label>Preț: <input type="number" step="0.01" th:field="*{price}"></label>
+    <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div><br>
+
+    <label>Pasager:
+        <select th:field="*{passenger}">
+            <option th:each="p : ${passengers}" th:value="${p.id}" th:text="${p.name}"></option>
+        </select>
+    </label><br><br>
+
+    <label>Zbor:
+        <select th:field="*{flight}">
+            <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+        </select>
+    </label><br><br>
+
+    <button type="submit">Actualizează</button>
 </form>
-<p><a th:href="@{/tickets}">Anulează</a></p>
 </body>
 </html>

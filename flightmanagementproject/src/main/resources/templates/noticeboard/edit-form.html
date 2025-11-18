@@ -1,24 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Editează Panou</title>
-</head>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head><title>Editează Panou</title></head>
 <body>
 <h1>Editează Panou</h1>
 <form th:action="@{/noticeboards/{id}/edit(id=${noticeboard.id})}" th:object="${noticeboard}" method="post">
-    <div>
-        <label>ID:</label>
-        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
-    </div>
-    <br>
-    <div>
-        <label for="date">Data Panoului:</label>
-        <input type="date" id="date" th:field="*{date}" required>
-    </div>
-    <br>
-    <button type="submit">Actualizează Panoul</button>
+    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
+    <label>Data:</label>
+    <input type="date" th:field="*{date}" required>
+    <br><br>
+    <button type="submit">Actualizează</button>
 </form>
-<p><a th:href="@{/noticeboards}">Anulează</a></p>
-</body>
-</html>
+</body></html>

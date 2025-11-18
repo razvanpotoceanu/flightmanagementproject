@@ -1,71 +1,53 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Flight;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
+import com.example.flight.flightmanagementproject.repositories.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FlightService {
 
-    private final AbstractRepository<Flight, String> flightRepository;
+    private final FlightRepository repository;
 
     @Autowired
-    public FlightService(@Qualifier("flightRepository") AbstractRepository<Flight, String> flightRepository) {
-        this.flightRepository = flightRepository;
+    public FlightService(FlightRepository repository) {
+        this.repository = repository;
     }
 
     public List<Flight> getAllFlights() {
-        return flightRepository.findAll();
+        return repository.findAll();
     }
 
-    public Flight getFlightById(String id) throws ResourceNotFoundException {
-        return flightRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Flight with id " + id + " not found."));
+    public Flight getFlightById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Flight not found with id: " + id));
     }
 
-    // Metodă de creare (din vechiul tău cod)
-    public Flight addFlight(Flight flight) throws RepositoryException {
-        if (flight.getId() == null || flight.getId().isEmpty()) {
-            flight.setId(UUID.randomUUID().toString());
-        }
-        if (flight.getTickets() == null) {
-            flight.setTickets(new ArrayList<>());
-        }
-        if (flight.getFlightAssignments() == null) {
-            flight.setFlightAssignments(new ArrayList<>());
-        }
-
-        return flightRepository.save(flight);
+    public void saveFlight(Flight flight) {
+        // ID-ul este generat automat de baza de date
+        repository.save(flight);
     }
 
-    public void deleteFlight(String id) throws RepositoryException {
-        if (!flightRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Flight with id " + id + " not found.");
-        }
-        flightRepository.deleteById(id);
+    public void updateFlight(Long id, Flight updatedFlight) {
+        Flight existing = getFlightById(id);
+
+        existing.setFlightNumber(updatedFlight.getFlightNumber());
+        existing.setDepartureTime(updatedFlight.getDepartureTime());
+        existing.setArrivalTime(updatedFlight.getArrivalTime());
+        existing.setAirplane(updatedFlight.getAirplane());
+        existing.setNoticeBoard(updatedFlight.getNoticeBoard());
+
+        repository.save(existing);
     }
 
-
-    public Flight updateFlight(String id, Flight flight) throws RepositoryException {
-        // Setăm ID-ul din URL
-        flight.setId(id);
-
-        // Inițializăm ambele liste dacă sunt null
-        if (flight.getTickets() == null) {
-            flight.setTickets(new ArrayList<>());
+    public void deleteFlight(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Flight not found with id: " + id);
         }
-        if (flight.getFlightAssignments() == null) {
-            flight.setFlightAssignments(new ArrayList<>());
-        }
-
-        return flightRepository.save(flight);
+        repository.deleteById(id);
     }
 }

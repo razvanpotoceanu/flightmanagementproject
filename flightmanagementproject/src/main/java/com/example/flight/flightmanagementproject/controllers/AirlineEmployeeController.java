@@ -1,15 +1,15 @@
 package com.example.flight.flightmanagementproject.controllers;
 
 import com.example.flight.flightmanagementproject.enums.AirlineEmployeeRole;
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.AirlineEmployee;
 import com.example.flight.flightmanagementproject.services.AirlineEmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/airline-employees")
@@ -22,42 +22,31 @@ public class AirlineEmployeeController {
         this.service = service;
     }
 
-    // 1. LISTA
     @GetMapping
-    public String getAll(Model model) {
+    public String list(Model model) {
         model.addAttribute("employees", service.getAll());
         return "airline-employee/index";
     }
 
-    // 2. FORMULAR CREARE
     @GetMapping("/new")
-    public String showForm(Model model) {
+    public String showAddForm(Model model) {
         model.addAttribute("employee", new AirlineEmployee());
         model.addAttribute("roles", AirlineEmployeeRole.values());
         return "airline-employee/form";
     }
 
-    // 3. SALVARE
     @PostMapping
-    public RedirectView add(@ModelAttribute AirlineEmployee employee) throws RepositoryException {
-        service.add(employee);
-        return new RedirectView("/airline-employees");
-    }
-
-    // 4. DETALII (Aici era posibil problema)
-    @GetMapping("/{id}")
-    public String getDetails(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("employee", service.getById(id));
-            return "airline-employee/details";
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/airline-employees";
+    public String add(@Valid @ModelAttribute("employee") AirlineEmployee employee, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("roles", AirlineEmployeeRole.values());
+            return "airline-employee/form";
         }
+        service.save(employee);
+        return "redirect:/airline-employees";
     }
 
-    // 5. FORMULAR EDITARE (Aici era posibil problema)
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         try {
             model.addAttribute("employee", service.getById(id));
             model.addAttribute("roles", AirlineEmployeeRole.values());
@@ -67,17 +56,30 @@ public class AirlineEmployeeController {
         }
     }
 
-    // 6. UPDATE
     @PostMapping("/{id}/edit")
-    public RedirectView update(@PathVariable String id, @ModelAttribute AirlineEmployee employee) throws RepositoryException {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("employee") AirlineEmployee employee, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("roles", AirlineEmployeeRole.values());
+            employee.setId(id);
+            return "airline-employee/edit-form";
+        }
         service.update(id, employee);
-        return new RedirectView("/airline-employees");
+        return "redirect:/airline-employees";
     }
 
-    // 7. DELETE
     @PostMapping("/{id}/delete")
-    public RedirectView delete(@PathVariable String id) throws RepositoryException {
+    public String delete(@PathVariable Long id) {
         service.delete(id);
-        return new RedirectView("/airline-employees");
+        return "redirect:/airline-employees";
+    }
+
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("employee", service.getById(id));
+            return "airline-employee/details";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/airline-employees";
+        }
     }
 }

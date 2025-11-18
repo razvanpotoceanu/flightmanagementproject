@@ -1,34 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Editează Bagaj</title>
-</head>
+<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head><title>Editează Bagaj</title></head>
 <body>
 <h1>Editează Bagaj</h1>
 <form th:action="@{/luggage/{id}/edit(id=${luggage.id})}" th:object="${luggage}" method="post">
-    <div>
-        <label>ID:</label>
-        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
-    </div>
-    <br>
-    <div>
-        <label for="ticketId">ID Bilet (Ticket ID):</label>
-        <input type="text" id="ticketId" th:field="*{ticketId}" required>
-    </div>
-    <br>
-    <div>
-        <label for="status">Status:</label>
-        <select id="status" th:field="*{status}" required>
-            <option value="">Alege un status...</option>
-            <option th:each="stat : ${statuses}"
-                    th:value="${stat}"
-                    th:text="${stat}">CHECKED_IN</option>
-        </select>
-    </div>
-    <br>
-    <button type="submit">Actualizează Bagajul</button>
+    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
+
+    <label>Bilet:</label>
+    <select th:field="*{ticket}">
+        <option th:each="t : ${tickets}"
+                th:value="${t.id}"
+                th:text="${t.seatNumber + ' (' + t.passenger.name + ')'}"></option>
+    </select>
+    <br><br>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+    </select>
+    <br><br>
+
+    <button type="submit">Actualizează</button>
 </form>
-<p><a th:href="@{/luggage}">Anulează</a></p>
-</body>
-</html>
+</body></html>

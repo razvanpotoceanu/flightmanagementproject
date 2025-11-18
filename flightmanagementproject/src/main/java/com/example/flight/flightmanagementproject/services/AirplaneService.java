@@ -1,68 +1,49 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Airplane;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
+import com.example.flight.flightmanagementproject.repositories.AirplaneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AirplaneService {
 
-    private final AbstractRepository<Airplane, String> airplaneRepository;
+    private final AirplaneRepository repository;
 
     @Autowired
-    public AirplaneService(@Qualifier("airplaneRepository") AbstractRepository<Airplane, String> airplaneRepository) {
-        this.airplaneRepository = airplaneRepository;
-    }
-
-    // Metodă de creare (din vechiul tău cod)
-    public Airplane addAirplane(Airplane airplane) throws RepositoryException {
-        // Logica de business: ne asigurăm că are un ID nou
-        if (airplane.getId() == null || airplane.getId().isEmpty()) {
-            airplane.setId(UUID.randomUUID().toString());
-        }
-        // Inițializăm listele goale
-        if (airplane.getFlights() == null) {
-            airplane.setFlights(new ArrayList<>());
-        }
-
-        return airplaneRepository.save(airplane);
+    public AirplaneService(AirplaneRepository repository) {
+        this.repository = repository;
     }
 
     public List<Airplane> getAllAirplanes() {
-        return airplaneRepository.findAll();
+        return repository.findAll();
     }
 
-    public Airplane getAirplaneById(String id) throws ResourceNotFoundException {
-        return airplaneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Airplane with id " + id + " not found."));
+    public Airplane getAirplaneById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Airplane not found with id: " + id));
     }
 
-    public void deleteAirplane(String id) throws RepositoryException {
-        if (!airplaneRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Airplane with id " + id + " not found.");
+    public void saveAirplane(Airplane airplane) {
+        repository.save(airplane);
+    }
+
+    public void updateAirplane(Long id, Airplane updatedAirplane) {
+        Airplane existing = getAirplaneById(id);
+
+        existing.setModelName(updatedAirplane.getModelName());
+        existing.setCapacity(updatedAirplane.getCapacity());
+
+        repository.save(existing);
+    }
+
+    public void deleteAirplane(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Airplane not found with id: " + id);
         }
-        airplaneRepository.deleteById(id);
+        repository.deleteById(id);
     }
-
-    public Airplane updateAirplane(String id, Airplane airplane) throws RepositoryException {
-        // Setăm ID-ul din URL pentru a asigura consistența
-        airplane.setId(id);
-
-        // Ne asigurăm că lista de zboruri nu devine null la actualizare
-        if (airplane.getFlights() == null) {
-            airplane.setFlights(new ArrayList<>());
-        }
-
-        // Apelul 'save' va suprascrie înregistrarea existentă în JSON
-        return airplaneRepository.save(airplane);
-    }
-
 }

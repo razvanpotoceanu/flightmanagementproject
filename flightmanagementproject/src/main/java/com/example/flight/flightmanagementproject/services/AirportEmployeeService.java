@@ -1,23 +1,20 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.AirportEmployee;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
+import com.example.flight.flightmanagementproject.repositories.AirportEmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AirportEmployeeService {
 
-    private final AbstractRepository<AirportEmployee, String> repository;
+    private final AirportEmployeeRepository repository;
 
     @Autowired
-    public AirportEmployeeService(@Qualifier("airportEmployeeRepository") AbstractRepository<AirportEmployee, String> repository) {
+    public AirportEmployeeService(AirportEmployeeRepository repository) {
         this.repository = repository;
     }
 
@@ -25,24 +22,27 @@ public class AirportEmployeeService {
         return repository.findAll();
     }
 
-    public AirportEmployee getById(String id) {
+    public AirportEmployee getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Angajat nu a fost găsit: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Angajat Aeroport negăsit cu ID: " + id));
     }
 
-    public void add(AirportEmployee employee) throws RepositoryException {
-        if (employee.getId() == null || employee.getId().isEmpty()) {
-            employee.setId(UUID.randomUUID().toString());
+    public void save(AirportEmployee employee) {
+        repository.save(employee);
+    }
+
+    public void update(Long id, AirportEmployee updatedEmployee) {
+        AirportEmployee existing = getById(id);
+        existing.setName(updatedEmployee.getName());
+        existing.setDepartment(updatedEmployee.getDepartment());
+        existing.setDesignation(updatedEmployee.getDesignation());
+        repository.save(existing);
+    }
+
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Angajat Aeroport negăsit cu ID: " + id);
         }
-        repository.save(employee);
-    }
-
-    public void update(String id, AirportEmployee employee) throws RepositoryException {
-        employee.setId(id);
-        repository.save(employee);
-    }
-
-    public void delete(String id) throws RepositoryException {
         repository.deleteById(id);
     }
 }

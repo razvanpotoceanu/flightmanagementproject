@@ -19,15 +19,19 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //dependecy pentru thymeleaf
+    // --- NOI DEPENDENȚE PENTRU PROIECTUL 4 ---
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // Adaugă acest modul pentru a ajuta Jackson să lucreze cu LocalDate/LocalDateTime
+    // Pentru LocalDate/LocalDateTime (dacă folosești Jackson, deși cu JPA e mai puțin critic direct)
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {

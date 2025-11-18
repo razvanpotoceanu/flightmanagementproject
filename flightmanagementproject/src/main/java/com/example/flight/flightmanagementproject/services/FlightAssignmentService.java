@@ -1,56 +1,52 @@
 package com.example.flight.flightmanagementproject.services;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.FlightAssignment;
-import com.example.flight.flightmanagementproject.repositories.AbstractRepository;
+import com.example.flight.flightmanagementproject.repositories.FlightAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FlightAssignmentService {
 
-    private final AbstractRepository<FlightAssignment, String> assignmentRepository;
+    private final FlightAssignmentRepository repository;
 
     @Autowired
-    public FlightAssignmentService(@Qualifier("flightAssignmentRepository") AbstractRepository<FlightAssignment, String> assignmentRepository) {
-        this.assignmentRepository = assignmentRepository;
-    }
-
-    public FlightAssignment addFlightAssignment(FlightAssignment assignment) throws RepositoryException {
-        if (assignment.getId() == null || assignment.getId().isEmpty()) {
-            assignment.setId(UUID.randomUUID().toString());
-        }
-        return assignmentRepository.save(assignment);
+    public FlightAssignmentService(FlightAssignmentRepository repository) {
+        this.repository = repository;
     }
 
     public List<FlightAssignment> getAllFlightAssignments() {
-        return assignmentRepository.findAll();
+        return repository.findAll();
     }
 
-    public FlightAssignment getFlightAssignmentById(String id) throws ResourceNotFoundException {
-        return assignmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("FlightAssignment with id " + id + " not found."));
+    public FlightAssignment getFlightAssignmentById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Asignarea nu a fost găsită cu id: " + id));
     }
 
-    public void deleteFlightAssignment(String id) throws RepositoryException {
-        if (!assignmentRepository.existsById(id)) {
-            throw new ResourceNotFoundException("FlightAssignment with id " + id + " not found.");
+    public void saveFlightAssignment(FlightAssignment assignment) {
+        // Aici am putea adăuga o validare: să ne asigurăm că MĂCAR UN angajat este selectat
+        repository.save(assignment);
+    }
+
+    public void updateFlightAssignment(Long id, FlightAssignment updatedAssignment) {
+        FlightAssignment existing = getFlightAssignmentById(id);
+
+        existing.setFlight(updatedAssignment.getFlight());
+        // Actualizăm ambele posibilități
+        existing.setAirlineEmployee(updatedAssignment.getAirlineEmployee());
+        existing.setAirportEmployee(updatedAssignment.getAirportEmployee());
+
+        repository.save(existing);
+    }
+
+    public void deleteFlightAssignment(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Asignarea nu a fost găsită cu id: " + id);
         }
-        assignmentRepository.deleteById(id);
+        repository.deleteById(id);
     }
-    public FlightAssignment updateFlightAssignment(String id, FlightAssignment assignment) throws RepositoryException {
-        // Setăm ID-ul din URL
-        assignment.setId(id);
-
-        // Această clasă nu are liste de inițializat
-
-        return assignmentRepository.save(assignment);
-    }
-
-
 }

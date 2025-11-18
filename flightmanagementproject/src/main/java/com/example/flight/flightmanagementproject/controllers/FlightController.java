@@ -1,89 +1,96 @@
 package com.example.flight.flightmanagementproject.controllers;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Flight;
+import com.example.flight.flightmanagementproject.services.AirplaneService;
 import com.example.flight.flightmanagementproject.services.FlightService;
+import com.example.flight.flightmanagementproject.services.NoticeBoardService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/flights")
 public class FlightController {
 
-    private final FlightService service;
+    private final FlightService flightService;
+    private final AirplaneService airplaneService;
+    private final NoticeBoardService noticeBoardService;
 
     @Autowired
-    public FlightController(FlightService service) {
-        this.service = service;
+    public FlightController(FlightService flightService, AirplaneService airplaneService, NoticeBoardService noticeBoardService) {
+        this.flightService = flightService;
+        this.airplaneService = airplaneService;
+        this.noticeBoardService = noticeBoardService;
     }
 
     @GetMapping
-    public String getAllFlights(Model model) {
-        model.addAttribute("flights", service.getAllFlights());
+    public String list(Model model) {
+        model.addAttribute("flights", flightService.getAllFlights());
         return "flight/index";
     }
 
     @GetMapping("/new")
-    public String showNewFlightForm(Model model) {
+    public String showAddForm(Model model) {
         model.addAttribute("flight", new Flight());
+        // Trimitem listele pentru dropdown-uri
+        model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+        model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
         return "flight/form";
     }
 
-    // 3. POST CREATE: Am eliminat try...catch
     @PostMapping
-    public RedirectView addFlight(@ModelAttribute Flight flight) throws RepositoryException {
-        // Dacă service.addFlight eșuează, vei vedea acum eroarea 500
-        service.addFlight(flight);
-
-        return new RedirectView("/flights");
-    }
-
-    // 4. POST DELETE: Am eliminat try...catch
-    @PostMapping("/{id}/delete")
-    public RedirectView deleteFlight(@PathVariable String id) throws RepositoryException {
-        service.deleteFlight(id);
-
-        return new RedirectView("/flights");
-    }
-
-    /*
-     * ########## METODE NOI PENTRU TEMA 3 ##########
-     */
-
-    // 5. GET DETAILS
-    @GetMapping("/{id}")
-    public String getFlightDetails(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("flight", service.getFlightById(id));
-            return "flight/details"; // Template nou
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/flights";
+    public String addFlight(@Valid @ModelAttribute Flight flight, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            // Reîncărcăm listele în caz de eroare
+            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            return "flight/form";
         }
+        flightService.saveFlight(flight);
+        return "redirect:/flights";
     }
 
-    // 6. GET EDIT
     @GetMapping("/{id}/edit")
-    public String showEditFlightForm(@PathVariable String id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         try {
-            model.addAttribute("flight", service.getFlightById(id));
-            return "flight/edit-form"; // Template nou
+            model.addAttribute("flight", flightService.getFlightById(id));
+            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            return "flight/edit-form";
         } catch (ResourceNotFoundException e) {
             return "redirect:/flights";
         }
     }
 
-    // 7. POST UPDATE
     @PostMapping("/{id}/edit")
-    public RedirectView updateFlight(@PathVariable String id, @ModelAttribute Flight flight) {
-        try {
-            service.updateFlight(id, flight);
-        } catch (RepositoryException e) {
-            // Logare
+    public String updateFlight(@PathVariable Long id, @Valid @ModelAttribute Flight flight, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            flight.setId(id);
+            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            return "flight/edit-form";
         }
-        return new RedirectView("/flights");
+        flightService.updateFlight(id, flight);
+        return "redirect:/flights";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteFlight(@PathVariable Long id) {
+        flightService.deleteFlight(id);
+        return "redirect:/flights";
+    }
+
+    @GetMapping("/{id}")
+    public String getDetails(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("flight", flightService.getFlightById(id));
+            return "flight/details";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/flights";
+        }
     }
 }

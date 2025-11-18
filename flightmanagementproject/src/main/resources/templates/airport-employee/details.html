@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Detalii Angajat</title></head>
 <body>
-<h1>Detalii Angajat (Aeroport)</h1>
-<p><strong>ID:</strong> <span th:text="${employee.id}"></span></p>
-<p><strong>Nume:</strong> <span th:text="${employee.name}"></span></p>
-<p><strong>Departament:</strong> <span th:text="${employee.department}"></span></p>
-<p><strong>Funcție:</strong> <span th:text="${employee.designation}"></span></p>
-
-<a th:href="@{/airport-employees}">Înapoi la Listă</a>
-</body>
-</html>
+<h1>Detalii Angajat</h1>
+<p>ID: <span th:text="${employee.id}"></span></p>
+<p>Nume: <span th:text="${employee.name}"></span></p>
+<p>Funcție: <span th:text="${employee.designation}"></span></p>
+<p>Departament: <span th:text="${employee.department}"></span></p>
+<a th:href="@{/airport-employees}">Înapoi</a>
+</body></html>

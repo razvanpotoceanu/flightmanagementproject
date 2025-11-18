@@ -1,17 +1,17 @@
 package com.example.flight.flightmanagementproject.controllers;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
 import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.Airplane;
 import com.example.flight.flightmanagementproject.services.AirplaneService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model; // Clasa esențială pentru Thymeleaf
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("/airplanes") // Ruta de bază: /airplanes
+@RequestMapping("/airplanes")
 public class AirplaneController {
 
     private final AirplaneService service;
@@ -21,88 +21,60 @@ public class AirplaneController {
         this.service = service;
     }
 
-    // 1. GET ALL: Afișează lista (index.html)
-    // Ruta: GET /airplanes
     @GetMapping
-    public String getAllAirplanes(Model model) {
-        // Punem lista de avioane în obiectul 'Model'
+    public String list(Model model) {
         model.addAttribute("airplanes", service.getAllAirplanes());
-
-        // Returnează calea către templates/airplane/index.html
         return "airplane/index";
     }
 
-    // 2. GET NEW: Afișează formularul de creare (form.html)
-    // Ruta: GET /airplanes/new
     @GetMapping("/new")
-    public String showNewAirplaneForm(Model model) {
-        // Punem un obiect 'Airplane' gol pentru a mapa câmpurile din formular
+    public String showAddForm(Model model) {
         model.addAttribute("airplane", new Airplane());
-
-        // Returnează calea către templates/airplane/form.html
         return "airplane/form";
     }
 
-    // 3. POST CREATE: Procesează formularul și salvează
-    // Ruta: POST /airplanes (Metoda POST a formularului)
     @PostMapping
-    // @ModelAttribute preia datele din formular și le mapează pe obiectul Airplane
-    public RedirectView addAirplane(@ModelAttribute Airplane airplane) {
-        try {
-            service.addAirplane(airplane);
-        } catch (RepositoryException e) {
-            // Logare sau tratare simplă a erorii (fără validări complexe, conform cerinței)
+    public String addAirplane(@Valid @ModelAttribute Airplane airplane, BindingResult result) {
+        if (result.hasErrors()) {
+            return "airplane/form";
         }
-        // Redirecționează utilizatorul la lista actualizată
-        return new RedirectView("/airplanes");
+        service.saveAirplane(airplane);
+        return "redirect:/airplanes";
     }
 
-    // 4. POST DELETE: Șterge un avion după ID (cerința folosește POST)
-    // Ruta: POST /airplanes/{id}/delete
-    @PostMapping("/{id}/delete")
-    public RedirectView deleteAirplane(@PathVariable String id) {
-        try {
-            service.deleteAirplane(id);
-        } catch (ResourceNotFoundException | RepositoryException e) {
-            // Logare sau tratare
-        }
-        // Redirecționează utilizatorul la lista actualizată
-        return new RedirectView("/airplanes");
-    }
-
-    // Metodele vechi de GET/DELETE/{id} și POST (cu @RequestBody) au fost eliminate,
-    // deoarece nu sunt cerute pentru interfața web simplă.
-// 5. GET DETAILS
-    @GetMapping("/{id}")
-    public String getAirplaneDetails(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("airplane", service.getAirplaneById(id));
-            return "airplane/details"; // Template nou
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/airplanes";
-        }
-    }
-
-    // 6. GET EDIT
     @GetMapping("/{id}/edit")
-    public String showEditAirplaneForm(@PathVariable String id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) {
         try {
             model.addAttribute("airplane", service.getAirplaneById(id));
-            return "airplane/edit-form"; // Template nou
+            return "airplane/edit-form";
         } catch (ResourceNotFoundException e) {
             return "redirect:/airplanes";
         }
     }
 
-    // 7. POST UPDATE
     @PostMapping("/{id}/edit")
-    public RedirectView updateAirplane(@PathVariable String id, @ModelAttribute Airplane airplane) {
-        try {
-            service.updateAirplane(id, airplane);
-        } catch (RepositoryException e) {
-            // Logare
+    public String updateAirplane(@PathVariable Long id, @Valid @ModelAttribute Airplane airplane, BindingResult result) {
+        if (result.hasErrors()) {
+            airplane.setId(id);
+            return "airplane/edit-form";
         }
-        return new RedirectView("/airplanes");
+        service.updateAirplane(id, airplane);
+        return "redirect:/airplanes";
     }
 
+    @PostMapping("/{id}/delete")
+    public String deleteAirplane(@PathVariable Long id) {
+        service.deleteAirplane(id);
+        return "redirect:/airplanes";
+    }
+
+    @GetMapping("/{id}")
+    public String getDetails(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("airplane", service.getAirplaneById(id));
+            return "airplane/details";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/airplanes";
+        }
+    }
 }

@@ -1,89 +1,88 @@
 package com.example.flight.flightmanagementproject.controllers;
 
-import com.example.flight.flightmanagementproject.exceptions.RepositoryException;
-import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundException;
 import com.example.flight.flightmanagementproject.models.FlightAssignment;
+import com.example.flight.flightmanagementproject.services.AirlineEmployeeService;
+import com.example.flight.flightmanagementproject.services.AirportEmployeeService;
 import com.example.flight.flightmanagementproject.services.FlightAssignmentService;
+import com.example.flight.flightmanagementproject.services.FlightService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
-@Controller // NECESAR: Marchează clasa ca un Controller
-@RequestMapping("/assignments") // NECESAR: Definește ruta publică
+@Controller
+@RequestMapping("/assignments")
 public class FlightAssignmentController {
 
     private final FlightAssignmentService service;
+    private final FlightService flightService;
+    private final AirlineEmployeeService airlineService;
+    private final AirportEmployeeService airportService;
 
-    @Autowired // NECESAR: Injectează Service-ul
-    public FlightAssignmentController(FlightAssignmentService service) {
+    @Autowired
+    public FlightAssignmentController(FlightAssignmentService service,
+                                      FlightService flightService,
+                                      AirlineEmployeeService airlineService,
+                                      AirportEmployeeService airportService) {
         this.service = service;
+        this.flightService = flightService;
+        this.airlineService = airlineService;
+        this.airportService = airportService;
     }
 
-    // GET ALL: Afișează lista - Răspunde la GET /assignments
     @GetMapping
-    public String getAllAssignments(Model model) {
+    public String list(Model model) {
         model.addAttribute("assignments", service.getAllFlightAssignments());
         return "assignment/index";
     }
 
-    // GET NEW: Afișează formularul - Răspunde la GET /assignments/new
     @GetMapping("/new")
-    public String showNewAssignmentForm(Model model) {
+    public String showAddForm(Model model) {
         model.addAttribute("assignment", new FlightAssignment());
+        populateModelLists(model); // Metodă ajutătoare pentru liste
         return "assignment/form";
     }
 
-    // POST CREATE: Salvează - Răspunde la POST /assignments
     @PostMapping
-    public RedirectView addAssignment(@ModelAttribute FlightAssignment assignment) throws RepositoryException {
-        // Logica de generare ID este în Service (sperăm)
-        service.addFlightAssignment(assignment);
-        return new RedirectView("/assignments");
-    }
-
-    // POST DELETE: Șterge - Răspunde la POST /assignments/{id}/delete
-    @PostMapping("/{id}/delete")
-    public RedirectView deleteAssignment(@PathVariable String id) throws RepositoryException {
-        service.deleteFlightAssignment(id);
-        return new RedirectView("/assignments");
-    }
-    /*
-     * ########## METODE NOI PENTRU TEMA 3 ##########
-     */
-
-    // GET DETAILS
-    @GetMapping("/{id}")
-    public String getAssignmentDetails(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("assignment", service.getFlightAssignmentById(id));
-            return "assignment/details";
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/assignments";
+    public String addAssignment(@Valid @ModelAttribute FlightAssignment assignment, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            populateModelLists(model);
+            return "assignment/form";
         }
+        service.saveFlightAssignment(assignment);
+        return "redirect:/assignments";
     }
 
-    // GET EDIT
     @GetMapping("/{id}/edit")
-    public String showEditAssignmentForm(@PathVariable String id, Model model) {
-        try {
-            model.addAttribute("assignment", service.getFlightAssignmentById(id));
-            return "assignment/edit-form";
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/assignments";
-        }
+    public String showEditForm(@PathVariable Long id, Model model) {
+        model.addAttribute("assignment", service.getFlightAssignmentById(id));
+        populateModelLists(model);
+        return "assignment/edit-form";
     }
 
-    // POST UPDATE
     @PostMapping("/{id}/edit")
-    public RedirectView updateAssignment(@PathVariable String id, @ModelAttribute FlightAssignment assignment) {
-        try {
-            service.updateFlightAssignment(id, assignment);
-        } catch (RepositoryException e) {
-            // Logare
+    public String updateAssignment(@PathVariable Long id, @Valid @ModelAttribute FlightAssignment assignment, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            assignment.setId(id);
+            populateModelLists(model);
+            return "assignment/edit-form";
         }
-        return new RedirectView("/assignments");
+        service.updateFlightAssignment(id, assignment);
+        return "redirect:/assignments";
     }
 
+    @PostMapping("/{id}/delete")
+    public String deleteAssignment(@PathVariable Long id) {
+        service.deleteFlightAssignment(id);
+        return "redirect:/assignments";
+    }
+
+    // Metodă privată pentru a nu repeta codul de populare a listelor dropdown
+    private void populateModelLists(Model model) {
+        model.addAttribute("flights", flightService.getAllFlights());
+        model.addAttribute("airlineEmployees", airlineService.getAll());
+        model.addAttribute("airportEmployees", airportService.getAll());
+    }
 }

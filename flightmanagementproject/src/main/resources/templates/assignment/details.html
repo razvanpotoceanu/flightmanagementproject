@@ -1,24 +1,58 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Detalii Asignare</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .detail-box { border: 1px solid #ccc; padding: 15px; max-width: 500px; background-color: #fff; }
+        strong { display: inline-block; width: 140px; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.2em; margin-top: 20px; }
+    </style>
 </head>
 <body>
 <h1>Detalii Asignare</h1>
-<div>
-    <strong>ID Asignare:</strong>
-    <p th:text="${assignment.id}">ID ASM</p>
+
+<div class="detail-box">
+    <p><strong>ID Asignare:</strong> <span th:text="${assignment.id}">ID</span></p>
+
+    <h2>Detalii Zbor</h2>
+    <div th:if="${assignment.flight != null}">
+        <p><strong>Nr. Zbor:</strong> <span th:text="${assignment.flight.flightNumber}">RO-001</span></p>
+        <p><strong>Plecare:</strong> <span th:text="${assignment.flight.departureTime}">Ora</span></p>
+        <p><strong>Sosire:</strong> <span th:text="${assignment.flight.arrivalTime}">Ora</span></p>
+    </div>
+    <div th:if="${assignment.flight == null}" style="color: red;">
+        <p>Zborul nu este asociat sau a fost șters.</p>
+    </div>
+
+    <h2>Detalii Angajat Asignat</h2>
+
+    <!-- Cazul 1: Este un Angajat al Companiei Aeriene -->
+    <div th:if="${assignment.airlineEmployee != null}">
+        <p><strong>Tip Angajat:</strong> <span style="color: blue;">Companie Aeriană</span></p>
+        <p><strong>Nume:</strong> <span th:text="${assignment.airlineEmployee.name}">Nume</span></p>
+        <p><strong>Rol:</strong> <span th:text="${assignment.airlineEmployee.role}">ROL</span></p>
+    </div>
+
+    <!-- Cazul 2: Este un Angajat al Aeroportului -->
+    <div th:if="${assignment.airportEmployee != null}">
+        <p><strong>Tip Angajat:</strong> <span style="color: green;">Aeroport</span></p>
+        <p><strong>Nume:</strong> <span th:text="${assignment.airportEmployee.name}">Nume</span></p>
+        <p><strong>Funcție:</strong> <span th:text="${assignment.airportEmployee.designation}">Funcție</span></p>
+        <p><strong>Departament:</strong> <span th:text="${assignment.airportEmployee.department}">Dept</span></p>
+    </div>
+
+    <!-- Cazul 3: Niciun angajat (Eroare de date) -->
+    <div th:if="${assignment.airlineEmployee == null and assignment.airportEmployee == null}" style="color: red; font-style: italic;">
+        <p>Niciun angajat nu este asociat acestei asignări.</p>
+    </div>
 </div>
-<div>
-    <strong>ID Zbor:</strong>
-    <p th:text="${assignment.flightId}">ID Zbor</p>
-</div>
-<div>
-    <strong>ID Angajat:</strong>
-    <p th:text="${assignment.staffId}">ID Angajat</p>
-</div>
+
 <hr>
-<p><a th:href="@{/assignments}">Înapoi la Listă</a></p>
+<p>
+    <a th:href="@{/assignments}">Înapoi la Listă</a> |
+    <a th:href="@{/assignments/{id}/edit(id=${assignment.id})}">Editează</a>
+</p>
 </body>
 </html>

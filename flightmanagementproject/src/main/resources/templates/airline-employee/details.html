@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Detalii Angajat</title></head>
 <body>
-<h1>Detalii Angajat (Airline)</h1>
-<p><strong>ID:</strong> <span th:text="${employee.id}"></span></p>
-<p><strong>Nume:</strong> <span th:text="${employee.name}"></span></p>
-<p><strong>Rol:</strong> <span th:text="${employee.role}"></span></p>
-<p><strong>Asignări Zboruri:</strong> <span th:text="${#lists.size(employee.assignments)}"></span></p>
-
-<a th:href="@{/airline-employees}">Înapoi la Listă</a>
-</body>
-</html>
+<h1>Detalii Angajat</h1>
+<p>ID: <span th:text="${employee.id}"></span></p>
+<p>Nume: <span th:text="${employee.name}"></span></p>
+<p>Rol: <span th:text="${employee.role}"></span></p>
+<a th:href="@{/airline-employees}">Înapoi</a>
+</body></html>

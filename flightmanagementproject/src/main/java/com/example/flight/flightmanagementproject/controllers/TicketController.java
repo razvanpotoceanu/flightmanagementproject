@@ -36,16 +36,14 @@ public class TicketController {
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("ticket", new Ticket());
-        model.addAttribute("passengers", passengerService.getAllPassengers());
-        model.addAttribute("flights", flightService.getAllFlights());
+        populateDropdowns(model);
         return "ticket/form";
     }
 
     @PostMapping
     public String addTicket(@Valid @ModelAttribute Ticket ticket, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("passengers", passengerService.getAllPassengers());
-            model.addAttribute("flights", flightService.getAllFlights());
+            populateDropdowns(model);
             return "ticket/form";
         }
         ticketService.saveTicket(ticket);
@@ -56,8 +54,7 @@ public class TicketController {
     public String showEditForm(@PathVariable Long id, Model model) {
         try {
             model.addAttribute("ticket", ticketService.getTicketById(id));
-            model.addAttribute("passengers", passengerService.getAllPassengers());
-            model.addAttribute("flights", flightService.getAllFlights());
+            populateDropdowns(model);
             return "ticket/edit-form";
         } catch (ResourceNotFoundException e) {
             return "redirect:/tickets";
@@ -68,8 +65,7 @@ public class TicketController {
     public String updateTicket(@PathVariable Long id, @Valid @ModelAttribute Ticket ticket, BindingResult result, Model model) {
         if (result.hasErrors()) {
             ticket.setId(id);
-            model.addAttribute("passengers", passengerService.getAllPassengers());
-            model.addAttribute("flights", flightService.getAllFlights());
+            populateDropdowns(model);
             return "ticket/edit-form";
         }
         ticketService.updateTicket(id, ticket);
@@ -90,5 +86,11 @@ public class TicketController {
         } catch (ResourceNotFoundException e) {
             return "redirect:/tickets";
         }
+    }
+
+    // Metodă helper pentru a evita duplicarea codului
+    private void populateDropdowns(Model model) {
+        model.addAttribute("passengers", passengerService.getAllPassengers());
+        model.addAttribute("flights", flightService.getAllFlights());
     }
 }

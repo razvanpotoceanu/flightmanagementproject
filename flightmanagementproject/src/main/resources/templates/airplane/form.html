@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Adaugă Avion</title>
-    <style>.error { color: red; }</style>
+    <style>.error { color: red; font-size: 0.9em; }</style>
 </head>
 <body>
 <h1>Adaugă Avion</h1>
@@ -16,9 +16,9 @@
     <br>
 
     <div>
-        <label>Capacitate:</label>
-        <!-- Folosim 'capacity' -->
-        <input type="number" th:field="*{capacity}">
+        <label>Capacitate (Număr):</label>
+        <!-- Dacă introduci text aici, Spring dă eroare de binding ('typeMismatch') -->
+        <input type="text" th:field="*{capacity}">
         <div class="error" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
     </div>
     <br>

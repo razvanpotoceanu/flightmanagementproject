@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Lista Bilete</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style>
+    <style>
+        table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; }
+        form { display: inline; }
+    </style>
 </head>
 <body>
-<h1>Lista Bilete</h1>
+<h1>Lista tuturor Biletelor</h1>
 <p><a th:href="@{/tickets/new}">Adaugă Bilet Nou</a></p>
 
 <table>
@@ -21,27 +25,28 @@
     </thead>
     <tbody>
     <tr th:each="ticket : ${tickets}">
-        <td th:text="${ticket.id}"></td>
-        <td th:text="${ticket.seatNumber}"></td>
-        <td th:text="${ticket.price}"></td>
+        <td th:text="${ticket.id}">ID</td>
+        <td th:text="${ticket.seatNumber}">Loc</td>
+        <td th:text="${ticket.price}">Preț</td>
 
-        <!-- Navigare prin obiecte -->
-        <td th:text="${ticket.passenger != null ? ticket.passenger.name : '-'}"></td>
-        <td th:text="${ticket.flight != null ? ticket.flight.flightNumber : '-'}"></td>
+        <!-- Navigare JPA: ticket.passenger.name -->
+        <!-- Verificăm dacă pasagerul e null pentru a evita erori -->
+        <td th:text="${ticket.passenger != null ? ticket.passenger.name : 'Fără Pasager'}">Pasager</td>
+
+        <!-- Navigare JPA: ticket.flight.flightNumber -->
+        <td th:text="${ticket.flight != null ? ticket.flight.flightNumber : 'Fără Zbor'}">Zbor</td>
 
         <td>
-            <a th:href="@{/tickets/{id}(id=${ticket.id})}">Detalii</a> |
-            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}">Edit</a> |
-            <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post" style="display:inline;">
+            <a th:href="@{/tickets/{id}(id=${ticket.id})}">Detalii</a>
+            <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}">Edit</a>
+            <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-
 <hr>
-<!-- BUTONUL CERUT -->
-<p><a th:href="@{/flights}">🏠 Înapoi la Zboruri</a></p>
+<p><a th:href="@{/passengers}">Înapoi la Pasageri</a></p>
 </body>
 </html>

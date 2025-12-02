@@ -23,27 +23,65 @@ public class PassengerService {
 
     public Passenger getPassengerById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Passenger not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pasagerul nu a fost găsit cu id: " + id));
     }
 
-    // Metoda de salvare nu mai returnează void, poate returna entitatea salvată
-    public Passenger savePassenger(Passenger passenger) {
-        // Nu generăm ID, MySQL o face (Auto Increment)
-        return repository.save(passenger);
+    public void savePassenger(Passenger passenger) {
+        // VALIDARE CÂMPURI
+        validatePassengerData(passenger);
+
+        // VALIDARE DUPLICAT (La Creare): Email unic
+        if (passenger.getId() == null && repository.existsByEmail(passenger.getEmail())) {
+            throw new IllegalArgumentException("Există deja un pasager cu acest email: " + passenger.getEmail());
+        }
+        // VALIDARE ID
+        if (passenger.getId() != null && repository.existsById(passenger.getId())) {
+            throw new IllegalArgumentException("Există deja un pasager cu acest ID.");
+        }
+
+        repository.save(passenger);
     }
 
-    public Passenger updatePassenger(Long id, Passenger updatedPassenger) {
+    public void updatePassenger(Long id, Passenger updatedPassenger) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Nu se poate actualiza. Pasager negăsit cu ID: " + id);
+        }
+
+        // Validăm datele de intrare
+        validatePassengerData(updatedPassenger);
+
         Passenger existing = getPassengerById(id);
+
+        // VALIDARE DUPLICAT (La Update): Verificăm emailul doar dacă s-a schimbat
+        if (!existing.getEmail().equals(updatedPassenger.getEmail()) &&
+                repository.existsByEmail(updatedPassenger.getEmail())) {
+            throw new IllegalArgumentException("Emailul " + updatedPassenger.getEmail() + " este deja folosit de alt pasager.");
+        }
+
         existing.setName(updatedPassenger.getName());
         existing.setEmail(updatedPassenger.getEmail());
         existing.setCurrency(updatedPassenger.getCurrency());
-        return repository.save(existing);
+
+        repository.save(existing);
+    }
+
+    private void validatePassengerData(Passenger p) {
+        if (p.getName() == null || p.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Numele este obligatoriu.");
+        }
+        if (p.getEmail() == null || p.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Emailul este obligatoriu.");
+        }
+        if (p.getCurrency() == null || p.getCurrency().trim().isEmpty()) {
+            throw new IllegalArgumentException("Valuta este obligatorie.");
+        }
     }
 
     public void deletePassenger(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Passenger not found with id: " + id);
+            throw new ResourceNotFoundException("Nu se poate șterge. Pasager negăsit cu ID: " + id);
         }
+        // Atenție: Ștergerea unui pasager va șterge și biletele (Cascade)
         repository.deleteById(id);
     }
 }

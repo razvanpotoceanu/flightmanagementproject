@@ -17,13 +17,12 @@ public class Passenger extends BaseEntity {
 
     @NotBlank(message = "Emailul este obligatoriu")
     @Email(message = "Formatul emailului este invalid")
-    @Column(unique = true) // Email unic în baza de date
+    @Column(unique = true)
     private String email;
 
     @NotBlank(message = "Valuta este obligatorie")
     private String currency;
 
-    // Relație: Un pasager are mai multe bilete
     @OneToMany(mappedBy = "passenger", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets = new ArrayList<>();
 

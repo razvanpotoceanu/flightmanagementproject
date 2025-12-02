@@ -1,38 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Adaugă Pasager</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
 </head>
 <body>
-
-<h1>Adaugă un Pasager Nou</h1>
-
+<h1>Adaugă Pasager</h1>
 <form th:action="@{/passengers}" th:object="${passenger}" method="post">
 
     <div>
-        <label for="name">Nume Complet:</label> <input type="text" id="name" th:field="*{name}" required> </div>
-
+        <label>Nume:</label>
+        <input type="text" th:field="*{name}">
+        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
     <br>
 
     <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}">
+        <label>Email:</label>
+        <input type="text" th:field="*{email}">
+        <!-- Aici vor apărea și erorile de format (@Email) și cele de duplicat (din Controller) -->
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
     </div>
-
     <br>
 
     <div>
-        <label for="currency">Valută:</label>
-        <input type="text" id="currency" th:field="*{currency}">
+        <label>Valută:</label>
+        <input type="text" th:field="*{currency}">
+        <div class="error" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"></div>
     </div>
-
     <br>
 
-    <button type="submit">Salvează Pasager</button>
+    <button type="submit">Salvează</button>
 </form>
-
-<p><a th:href="@{/passengers}">Înapoi la Listă</a></p>
-
+<p><a th:href="@{/passengers}">Înapoi</a></p>
 </body>
 </html>

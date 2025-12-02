@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PassengerRepository extends JpaRepository<Passenger, Long> {
-    // JpaRepository oferă deja metodele save(), findAll(), findById(), deleteById()
-    // Nu mai trebuie să scrii nimic aici!
+    // Metodă magică Spring Data JPA pentru a verifica existența după email
+    boolean existsByEmail(String email);
 }

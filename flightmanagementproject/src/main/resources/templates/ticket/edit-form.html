@@ -1,30 +1,67 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="http://www.thymeleaf.org">
-<head><title>Editează Bilet</title><style>.error{color:red}</style></head>
+<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <title>Editează Bilet</title>
+    <style>.error { color: red; font-size: 0.9em; }</style>
+</head>
 <body>
 <h1>Editează Bilet</h1>
+
 <form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" th:object="${ticket}" method="post">
-    <label>ID: <input type="text" th:field="*{id}" readonly></label><br><br>
 
-    <label>Loc: <input type="text" th:field="*{seatNumber}"></label>
-    <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div><br>
+    <!-- ID Readonly -->
+    <div>
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
+    </div>
+    <br>
 
-    <label>Preț: <input type="number" step="0.01" th:field="*{price}"></label>
-    <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div><br>
+    <!-- Loc -->
+    <div>
+        <label>Loc:</label>
+        <input type="text" th:field="*{seatNumber}">
+        <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}">Eroare Loc</div>
+    </div>
+    <br>
 
-    <label>Pasager:
+    <!-- Preț -->
+    <div>
+        <label>Preț:</label>
+        <input type="number" step="0.01" th:field="*{price}">
+        <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Eroare Preț</div>
+    </div>
+    <br>
+
+    <!-- Pasager Dropdown -->
+    <div>
+        <label>Pasager:</label>
         <select th:field="*{passenger}">
-            <option th:each="p : ${passengers}" th:value="${p.id}" th:text="${p.name}"></option>
+            <!-- Opțiunea curentă selectată automat de Thymeleaf pe baza ID-ului -->
+            <option th:each="p : ${passengers}"
+                    th:value="${p.id}"
+                    th:text="${p.name + ' (' + p.email + ')'}">
+            </option>
         </select>
-    </label><br><br>
+        <div class="error" th:if="${#fields.hasErrors('passenger')}" th:errors="*{passenger}">Eroare Pasager</div>
+    </div>
+    <br>
 
-    <label>Zbor:
+    <!-- Zbor Dropdown -->
+    <div>
+        <label>Zbor:</label>
         <select th:field="*{flight}">
-            <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+            <option th:each="f : ${flights}"
+                    th:value="${f.id}"
+                    th:text="${f.flightNumber + ' (' + f.departureTime + ')'}">
+            </option>
         </select>
-    </label><br><br>
+        <div class="error" th:if="${#fields.hasErrors('flight')}" th:errors="*{flight}">Eroare Zbor</div>
+    </div>
+    <br>
 
-    <button type="submit">Actualizează</button>
+    <button type="submit">Actualizează Bilet</button>
 </form>
+
+<p><a th:href="@{/tickets}">Anulează</a></p>
 </body>
 </html>

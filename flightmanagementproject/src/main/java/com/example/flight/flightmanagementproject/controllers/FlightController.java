@@ -44,13 +44,26 @@ public class FlightController {
 
     @PostMapping
     public String addFlight(@Valid @ModelAttribute Flight flight, BindingResult result, Model model) {
+        // 1. Validare de Format (ex: câmpuri goale)
         if (result.hasErrors()) {
-            // Reîncărcăm listele în caz de eroare
+            // Reîncărcăm listele în caz de eroare, altfel pagina crapă
             model.addAttribute("airplanes", airplaneService.getAllAirplanes());
             model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
             return "flight/form";
         }
-        flightService.saveFlight(flight);
+
+        // 2. Validare de Business (ex: număr zbor duplicat)
+        try {
+            flightService.saveFlight(flight);
+        } catch (IllegalArgumentException e) {
+            // Adăugăm eroarea manual în BindingResult
+            result.rejectValue("flightNumber", "error.flight", e.getMessage());
+            // Reîncărcăm listele
+            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            return "flight/form";
+        }
+
         return "redirect:/flights";
     }
 
@@ -74,7 +87,17 @@ public class FlightController {
             model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
             return "flight/edit-form";
         }
-        flightService.updateFlight(id, flight);
+
+        try {
+            flightService.updateFlight(id, flight);
+        } catch (IllegalArgumentException e) {
+            result.rejectValue("flightNumber", "error.flight", e.getMessage());
+            flight.setId(id);
+            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            return "flight/edit-form";
+        }
+
         return "redirect:/flights";
     }
 

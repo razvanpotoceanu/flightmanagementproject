@@ -1,36 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Detalii Bilet</title>
 </head>
 <body>
 <h1>Detalii Bilet</h1>
+
 <div>
-    <strong>ID:</strong>
-    <p th:text="${ticket.id}">ID Bilet</p>
+    <p><strong>ID Bilet:</strong> <span th:text="${ticket.id}"></span></p>
+    <p><strong>Preț:</strong> <span th:text="${ticket.price}"></span></p>
+    <p><strong>Loc:</strong> <span th:text="${ticket.seatNumber}"></span></p>
 </div>
-<div>
-    <strong>ID Pasager:</strong>
-    <p th:text="${ticket.passengerId}">ID Pasager</p>
-</div>
-<div>
-    <strong>ID Zbor:</strong>
-    <p th:text="${ticket.flightId}">ID Zbor</p>
-</div>
-<div>
-    <strong>Preț:</strong>
-    <p th:text="${ticket.price}">Preț</p>
-</div>
-<div>
-    <strong>Nr. Loc:</strong>
-    <p th:text="${ticket.seatNumber}">Loc</p>
-</div>
-<div>
-    <strong>Nr. Bagaje (Listă):</strong>
-    <p th:text="${#lists.size(ticket.luggages)}">0</p>
-</div>
+
 <hr>
-<p><a th:href="@{/tickets}">Înapoi la Listă</a></p>
+
+<h3>Informații Pasager</h3>
+<div th:if="${ticket.passenger != null}">
+    <p><strong>Nume:</strong> <span th:text="${ticket.passenger.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${ticket.passenger.email}"></span></p>
+</div>
+<div th:if="${ticket.passenger == null}">
+    <p>Nu există pasager asociat.</p>
+</div>
+
+<h3>Informații Zbor</h3>
+<div th:if="${ticket.flight != null}">
+    <p><strong>Nr. Zbor:</strong> <span th:text="${ticket.flight.flightNumber}"></span></p>
+    <p><strong>Plecare:</strong> <span th:text="${ticket.flight.departureTime}"></span></p>
+    <p><strong>Sosire:</strong> <span th:text="${ticket.flight.arrivalTime}"></span></p>
+</div>
+<div th:if="${ticket.flight == null}">
+    <p>Nu există zbor asociat.</p>
+</div>
+
+<hr>
+<p><a th:href="@{/tickets}">Înapoi la Lista Bilete</a></p>
 </body>
 </html>

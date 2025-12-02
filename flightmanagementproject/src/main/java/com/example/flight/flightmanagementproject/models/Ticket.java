@@ -2,6 +2,7 @@ package com.example.flight.flightmanagementproject.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @Entity
@@ -11,15 +12,17 @@ public class Ticket extends BaseEntity {
     @Positive(message = "Prețul trebuie să fie pozitiv")
     private double price;
 
-    @NotBlank(message = "Numărul locului este obligatoriu")
+    @NotBlank(message = "Locul este obligatoriu")
     private String seatNumber;
 
-    // Relație: Un bilet aparține unui singur pasager
+    // VALIDARE: Nu poți salva un bilet fără pasager
+    @NotNull(message = "Trebuie să selectați un pasager")
     @ManyToOne
     @JoinColumn(name = "passenger_id", nullable = false)
     private Passenger passenger;
 
-    // Relație: Un bilet este pentru un singur zbor
+    // VALIDARE: Nu poți salva un bilet fără zbor
+    @NotNull(message = "Trebuie să selectați un zbor")
     @ManyToOne
     @JoinColumn(name = "flight_id", nullable = false)
     private Flight flight;

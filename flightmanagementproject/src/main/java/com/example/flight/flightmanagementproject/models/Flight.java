@@ -25,12 +25,18 @@ public class Flight extends BaseEntity {
     @JoinColumn(name = "airplane_id")
     private Airplane airplane;
 
-    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "notice_board_id")
     private NoticeBoard noticeBoard;
+
+    // --- CORECȚIE 1: Cascade pe Bilete ---
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets = new ArrayList<>();
+
+    // --- CORECȚIE 2: Cascade pe Asignări (Acesta LIPSEA la tine!) ---
+    // Fără asta, nu poți șterge zborul dacă are personal asignat
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FlightAssignment> flightAssignments = new ArrayList<>();
 
     public Flight() {}
 
@@ -40,7 +46,7 @@ public class Flight extends BaseEntity {
         this.arrivalTime = arrivalTime;
     }
 
-    // Getters și Setters...
+    // Getters și Setters
     public String getFlightNumber() { return flightNumber; }
     public void setFlightNumber(String flightNumber) { this.flightNumber = flightNumber; }
     public String getDepartureTime() { return departureTime; }
@@ -51,6 +57,10 @@ public class Flight extends BaseEntity {
     public void setAirplane(Airplane airplane) { this.airplane = airplane; }
     public NoticeBoard getNoticeBoard() { return noticeBoard; }
     public void setNoticeBoard(NoticeBoard noticeBoard) { this.noticeBoard = noticeBoard; }
+
     public List<Ticket> getTickets() { return tickets; }
     public void setTickets(List<Ticket> tickets) { this.tickets = tickets; }
+
+    public List<FlightAssignment> getFlightAssignments() { return flightAssignments; }
+    public void setFlightAssignments(List<FlightAssignment> flightAssignments) { this.flightAssignments = flightAssignments; }
 }

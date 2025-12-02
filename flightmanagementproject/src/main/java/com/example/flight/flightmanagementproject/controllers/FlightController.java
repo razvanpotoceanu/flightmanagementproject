@@ -36,31 +36,22 @@ public class FlightController {
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("flight", new Flight());
-        // Trimitem listele pentru dropdown-uri
-        model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-        model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+        populateDropdowns(model);
         return "flight/form";
     }
 
     @PostMapping
     public String addFlight(@Valid @ModelAttribute Flight flight, BindingResult result, Model model) {
-        // 1. Validare de Format (ex: câmpuri goale)
         if (result.hasErrors()) {
-            // Reîncărcăm listele în caz de eroare, altfel pagina crapă
-            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            populateDropdowns(model);
             return "flight/form";
         }
 
-        // 2. Validare de Business (ex: număr zbor duplicat)
         try {
             flightService.saveFlight(flight);
         } catch (IllegalArgumentException e) {
-            // Adăugăm eroarea manual în BindingResult
-            result.rejectValue("flightNumber", "error.flight", e.getMessage());
-            // Reîncărcăm listele
-            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            handleBusinessException(e, result);
+            populateDropdowns(model);
             return "flight/form";
         }
 
@@ -71,8 +62,7 @@ public class FlightController {
     public String showEditForm(@PathVariable Long id, Model model) {
         try {
             model.addAttribute("flight", flightService.getFlightById(id));
-            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            populateDropdowns(model);
             return "flight/edit-form";
         } catch (ResourceNotFoundException e) {
             return "redirect:/flights";
@@ -83,18 +73,16 @@ public class FlightController {
     public String updateFlight(@PathVariable Long id, @Valid @ModelAttribute Flight flight, BindingResult result, Model model) {
         if (result.hasErrors()) {
             flight.setId(id);
-            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            populateDropdowns(model);
             return "flight/edit-form";
         }
 
         try {
             flightService.updateFlight(id, flight);
         } catch (IllegalArgumentException e) {
-            result.rejectValue("flightNumber", "error.flight", e.getMessage());
+            handleBusinessException(e, result);
             flight.setId(id);
-            model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-            model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+            populateDropdowns(model);
             return "flight/edit-form";
         }
 
@@ -114,6 +102,31 @@ public class FlightController {
             return "flight/details";
         } catch (ResourceNotFoundException e) {
             return "redirect:/flights";
+        }
+    }
+
+    // Metodă helper pentru a popula dropdown-urile (DRY)
+    private void populateDropdowns(Model model) {
+        model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+        model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
+    }
+
+    // Metodă helper pentru a mapa mesajele de eroare la câmpurile corecte
+    private void handleBusinessException(IllegalArgumentException e, BindingResult result) {
+        String msg = e.getMessage();
+        if (msg.contains("numărul")) {
+            result.rejectValue("flightNumber", "error.flight", msg);
+        } else if (msg.contains("Avionul")) {
+            result.rejectValue("airplane", "error.flight", msg);
+        } else if (msg.contains("ora") || msg.contains("Format")) {
+            // Dacă eroarea e legată de timp, o punem la departureTime (sau arrivalTime)
+            // sau global, depinde. O punem la departure pentru vizibilitate.
+            result.rejectValue("departureTime", "error.flight", msg);
+            // O putem pune și global:
+            // result.reject("error.flight", msg);
+        } else {
+            // Eroare generică
+            result.reject("error.flight", msg);
         }
     }
 }

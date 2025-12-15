@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalii Bagaj</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2>Detalii Bagaj</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>ID:</strong> <span th:text="${luggage.id}"></span></p>
+
+            <hr>
+
+            <h3>Informații Bilet</h3>
+            <div th:if="${luggage.ticket != null}">
+                <p><strong>ID Bilet:</strong> <span th:text="${luggage.ticket.id}"></span></p>
+                <p><strong>Loc:</strong> <span th:text="${luggage.ticket.seatNumber}"></span></p>
+                <p><strong>Pasager:</strong> <span th:text="${luggage.ticket.passenger != null ? luggage.ticket.passenger.name : 'Nespecificat'}"></span></p>
+            </div>
+            <div th:if="${luggage.ticket == null}">
+                <p class="text-danger">Nu există bilet asociat.</p>
+            </div>
+
+            <hr>
+
+            <p><strong>Status:</strong>
+                <span th:class="'badge ' +
+                    (${luggage.status.name() == 'CHECKED_IN' ? 'bg-primary' :
+                     (luggage.status.name() == 'LOADED' ? 'bg-info' :
+                     (luggage.status.name() == 'DELIVERED' ? 'bg-success' :
+                     (luggage.status.name() == 'LOST' ? 'bg-danger' : 'bg-secondary')))})"
+                      th:text="${luggage.status}">
+                </span>
+            </p>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/luggage}" class="btn btn-secondary">Înapoi</a>
+            <a th:href="@{/luggage/{id}/edit(id=${luggage.id})}" class="btn btn-warning">Editează</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

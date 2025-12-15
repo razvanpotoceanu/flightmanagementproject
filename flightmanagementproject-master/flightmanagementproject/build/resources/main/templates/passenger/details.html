@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalii Pasager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2>Detalii Pasager</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>ID:</strong> <span th:text="${passenger.id}"></span></p>
+            <p><strong>Nume:</strong> <span th:text="${passenger.name}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${passenger.email}"></span></p>
+            <p><strong>Valută:</strong> <span th:text="${passenger.currency}"></span></p>
+
+            <h4 class="mt-4">Bilete Cumpărate</h4>
+            <ul class="list-group" th:if="${not #lists.isEmpty(passenger.tickets)}">
+                <li class="list-group-item" th:each="ticket : ${passenger.tickets}">
+                    <span th:text="'Bilet #' + ${ticket.id}"></span> |
+                    Loc: <span th:text="${ticket.seatNumber}"></span> |
+                    Zbor: <span th:text="${ticket.flight != null ? ticket.flight.flightNumber : 'Nespecificat'}"></span>
+                </li>
+            </ul>
+            <p th:if="${#lists.isEmpty(passenger.tickets)}" class="text-muted">Niciun bilet asociat.</p>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/passengers}" class="btn btn-secondary">Înapoi</a>
+            <a th:href="@{/passengers/{id}/edit(id=${passenger.id})}" class="btn btn-warning">Editează</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

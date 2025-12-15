@@ -5,6 +5,7 @@ import com.example.flight.flightmanagementproject.models.Flight;
 import com.example.flight.flightmanagementproject.repositories.AirplaneRepository;
 import com.example.flight.flightmanagementproject.repositories.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -23,6 +24,28 @@ public class FlightService {
         this.airplaneRepository = airplaneRepository;
     }
 
+    /**
+     * Metoda actualizată pentru Proiectul 5: Suportă sortare și filtrare.
+     */
+    public List<Flight> getAllFlights(String keyword, String sortField, String sortDir) {
+        // 1. Configurare Sortare
+        if (sortField == null || sortField.isEmpty()) {
+            sortField = "id"; // Sortare implicită după ID
+        }
+
+        Sort sort = Sort.by(sortField);
+        sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
+
+        // 2. Configurare Filtrare (Căutare după număr zbor)
+        if (keyword != null && !keyword.isEmpty()) {
+            return repository.findByFlightNumberContainingIgnoreCase(keyword, sort);
+        }
+
+        // 3. Returnează tot, sortat
+        return repository.findAll(sort);
+    }
+
+    // Metoda veche (fără argumente) - Păstrată pentru compatibilitate
     public List<Flight> getAllFlights() {
         return repository.findAll();
     }
@@ -33,18 +56,13 @@ public class FlightService {
     }
 
     public void saveFlight(Flight flight) {
-        // 1. Validări de existență (Avion)
+        // Validări (copiate din versiunea ta anterioară)
         validateFlightReferences(flight);
-
-        // 2. Validări de Timp (Format și Logică)
         validateFlightTimes(flight);
 
-        // 3. Validare duplicat număr zbor
         if (flight.getId() == null && repository.existsByFlightNumber(flight.getFlightNumber())) {
             throw new IllegalArgumentException("Există deja un zbor cu numărul: " + flight.getFlightNumber());
         }
-
-        // 4. Validare ID existent (prevenire suprascriere)
         if (flight.getId() != null && repository.existsById(flight.getId())) {
             throw new IllegalArgumentException("Există deja un zbor cu ID-ul: " + flight.getId());
         }
@@ -59,14 +77,12 @@ public class FlightService {
 
         Flight existing = getFlightById(id);
 
-        // Validare duplicat număr (doar dacă s-a schimbat)
         if (!existing.getFlightNumber().equals(updatedFlight.getFlightNumber()) &&
                 repository.existsByFlightNumber(updatedFlight.getFlightNumber())) {
             throw new IllegalArgumentException("Numărul de zbor este deja folosit de alt zbor.");
         }
 
-        // Validări referințe și timp
-        // (Facem o copie temporară a obiectului pentru a valida relațiile înainte de a le seta)
+        // Facem o copie temporară pentru validare
         Flight temp = new Flight();
         temp.setAirplane(updatedFlight.getAirplane());
         temp.setDepartureTime(updatedFlight.getDepartureTime());
@@ -75,7 +91,6 @@ public class FlightService {
         validateFlightReferences(temp);
         validateFlightTimes(updatedFlight);
 
-        // Setăm valorile
         existing.setFlightNumber(updatedFlight.getFlightNumber());
         existing.setDepartureTime(updatedFlight.getDepartureTime());
         existing.setArrivalTime(updatedFlight.getArrivalTime());
@@ -94,10 +109,6 @@ public class FlightService {
         }
     }
 
-    /**
-     * Metoda de validare a orelor.
-     * Verifică formatul și logica (Sosire > Plecare).
-     */
     private void validateFlightTimes(Flight flight) {
         if (flight.getDepartureTime() == null || flight.getDepartureTime().trim().isEmpty()) {
             throw new IllegalArgumentException("Ora de plecare este obligatorie.");
@@ -107,24 +118,18 @@ public class FlightService {
         }
 
         try {
-            // Încercăm să convertim String-ul în LocalTime (Format așteptat: HH:mm)
-            // Dacă utilizatorul a introdus "25:00" sau "text", aici va crăpa.
             LocalTime departure = LocalTime.parse(flight.getDepartureTime());
             LocalTime arrival = LocalTime.parse(flight.getArrivalTime());
 
-            // Verificăm logica: Sosirea trebuie să fie după plecare
             if (arrival.isBefore(departure) && !arrival.equals(departure)) {
-                // Notă: Dacă zborul trece de miezul nopții, această logică ar trebui să fie mai complexă (cu Date),
-                // dar pentru un proiect simplu presupunem zboruri în aceeași zi.
                 throw new IllegalArgumentException("Ora de sosire trebuie să fie după ora de plecare.");
             }
 
             if (arrival.equals(departure)) {
-                throw new IllegalArgumentException("Ora de sosire nu poate fi identică cu cea de plecare.");
+                throw new IllegalArgumentException("Orele nu pot fi identice.");
             }
 
         } catch (DateTimeParseException e) {
-            // Dacă formatul nu e bun (ex: "8 AM" în loc de "08:00" sau "text")
             throw new IllegalArgumentException("Format oră invalid. Folosiți formatul HH:mm (ex: 14:30).");
         }
     }

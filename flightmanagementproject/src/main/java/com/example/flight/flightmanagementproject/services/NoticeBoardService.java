@@ -4,6 +4,7 @@ import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundExc
 import com.example.flight.flightmanagementproject.models.NoticeBoard;
 import com.example.flight.flightmanagementproject.repositories.NoticeBoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,5 +71,13 @@ public class NoticeBoardService {
             throw new ResourceNotFoundException("Nu se poate șterge. Panou negăsit cu ID: " + id);
         }
         repository.deleteById(id);
+    }
+    // Adaugă metoda aceasta:
+    public List<NoticeBoard> getAllNoticeBoards(String keyword, String sortField, String sortDir) {
+        if (sortField == null || sortField.isEmpty()) sortField = "id";
+        Sort sort = Sort.by(sortField);
+        sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
+
+        return repository.search(keyword, sort);
     }
 }

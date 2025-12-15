@@ -27,9 +27,20 @@ public class FlightController {
         this.noticeBoardService = noticeBoardService;
     }
 
+    // 1. LIST (CU SORTARE ȘI FILTRARE)
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("flights", flightService.getAllFlights());
+    public String list(
+            Model model,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        model.addAttribute("flights", flightService.getAllFlights(keyword, sortField, sortDir));
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
         return "flight/index";
     }
 
@@ -46,7 +57,6 @@ public class FlightController {
             populateDropdowns(model);
             return "flight/form";
         }
-
         try {
             flightService.saveFlight(flight);
         } catch (IllegalArgumentException e) {
@@ -54,19 +64,17 @@ public class FlightController {
             populateDropdowns(model);
             return "flight/form";
         }
-
         return "redirect:/flights";
     }
 
+    // ... (restul metodelor edit/delete rămân la fel, doar asigură-te că au validarea de mai sus)
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         try {
             model.addAttribute("flight", flightService.getFlightById(id));
             populateDropdowns(model);
             return "flight/edit-form";
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/flights";
-        }
+        } catch (ResourceNotFoundException e) { return "redirect:/flights"; }
     }
 
     @PostMapping("/{id}/edit")
@@ -76,7 +84,6 @@ public class FlightController {
             populateDropdowns(model);
             return "flight/edit-form";
         }
-
         try {
             flightService.updateFlight(id, flight);
         } catch (IllegalArgumentException e) {
@@ -85,7 +92,6 @@ public class FlightController {
             populateDropdowns(model);
             return "flight/edit-form";
         }
-
         return "redirect:/flights";
     }
 
@@ -100,33 +106,19 @@ public class FlightController {
         try {
             model.addAttribute("flight", flightService.getFlightById(id));
             return "flight/details";
-        } catch (ResourceNotFoundException e) {
-            return "redirect:/flights";
-        }
+        } catch (ResourceNotFoundException e) { return "redirect:/flights"; }
     }
 
-    // Metodă helper pentru a popula dropdown-urile (DRY)
     private void populateDropdowns(Model model) {
         model.addAttribute("airplanes", airplaneService.getAllAirplanes());
         model.addAttribute("noticeBoards", noticeBoardService.getAllNoticeBoards());
     }
 
-    // Metodă helper pentru a mapa mesajele de eroare la câmpurile corecte
     private void handleBusinessException(IllegalArgumentException e, BindingResult result) {
         String msg = e.getMessage();
-        if (msg.contains("numărul")) {
-            result.rejectValue("flightNumber", "error.flight", msg);
-        } else if (msg.contains("Avionul")) {
-            result.rejectValue("airplane", "error.flight", msg);
-        } else if (msg.contains("ora") || msg.contains("Format")) {
-            // Dacă eroarea e legată de timp, o punem la departureTime (sau arrivalTime)
-            // sau global, depinde. O punem la departure pentru vizibilitate.
-            result.rejectValue("departureTime", "error.flight", msg);
-            // O putem pune și global:
-            // result.reject("error.flight", msg);
-        } else {
-            // Eroare generică
-            result.reject("error.flight", msg);
-        }
+        if (msg.contains("numărul")) result.rejectValue("flightNumber", "error.flight", msg);
+        else if (msg.contains("ora") || msg.contains("Format")) result.rejectValue("departureTime", "error.flight", msg);
+        else if (msg.contains("Avionul")) result.rejectValue("airplane", "error.flight", msg);
+        else result.reject("error.flight", msg);
     }
 }

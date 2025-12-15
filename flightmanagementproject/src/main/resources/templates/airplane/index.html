@@ -2,38 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Lista Avioane</title>
-    <style> table, th, td { border: 1px solid black; padding: 5px; border-collapse: collapse; } </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-<h1>Lista Avioane</h1>
-<a th:href="@{/airplanes/new}">Adaugă Nou</a>
+<body class="bg-light">
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Model</th>
-        <th>Capacitate</th>
-        <th>Acțiuni</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="plane : ${airplanes}">
-        <td th:text="${plane.id}"></td>
-        <td>
-            <a th:href="@{/airplanes/{id}(id=${plane.id})}" th:text="${plane.modelName}"></a>
-        </td>
-        <!-- AICI ERA EROAREA: Folosim 'capacity', nu 'number' -->
-        <td th:text="${plane.capacity}"></td>
-        <td>
-            <a th:href="@{/airplanes/{id}/edit(id=${plane.id})}">Edit</a>
-            <form th:action="@{/airplanes/{id}/delete(id=${plane.id})}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p><a th:href="@{/flights}">Vezi Zboruri</a></p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-plane"></i> FlightApp</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/passengers}">Pasageri</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/flights}">Zboruri</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/airplanes}">Avioane</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/tickets}">Bilete</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/assignments}">Asignări</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Staff</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{/airline-employees}">Companie</a></li>
+                        <li><a class="dropdown-item" th:href="@{/airport-employees}">Aeroport</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">Management Avioane</h1>
+        <a th:href="@{/airplanes/new}" class="btn btn-success"><i class="fas fa-plus"></i> Adaugă Avion</a>
+    </div>
+
+    <form th:action="@{/airplanes}" method="get" class="card p-3 mb-4 shadow-sm">
+        <div class="input-group">
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Caută după model...">
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            <button type="submit" class="btn btn-primary">Caută</button>
+            <a th:href="@{/airplanes}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </form>
+
+    <div class="card shadow-sm">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-dark">
+            <tr>
+                <th><a th:href="@{/airplanes(sortField='id', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">ID</a></th>
+                <th><a th:href="@{/airplanes(sortField='modelName', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">Model</a></th>
+                <th>Capacitate</th>
+                <th>Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="plane : ${airplanes}">
+                <td th:text="${plane.id}"></td>
+                <td><a th:href="@{/airplanes/{id}(id=${plane.id})}" th:text="${plane.modelName}" class="fw-bold text-decoration-none"></a></td>
+                <td th:text="${plane.capacity}"></td>
+                <td>
+                    <a th:href="@{/airplanes/{id}/edit(id=${plane.id})}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                    <form th:action="@{/airplanes/{id}/delete(id=${plane.id})}" method="post" style="display:inline;" onsubmit="return confirm('Ștergi?');">
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

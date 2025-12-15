@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Detalii Bilet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Detalii Bilet</h1>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2>Detalii Bilet</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>ID Bilet:</strong> <span th:text="${ticket.id}"></span></p>
+            <p><strong>Preț:</strong> <span th:text="${ticket.price}"></span></p>
+            <p><strong>Loc:</strong> <span th:text="${ticket.seatNumber}"></span></p>
 
-<div>
-    <p><strong>ID Bilet:</strong> <span th:text="${ticket.id}"></span></p>
-    <p><strong>Preț:</strong> <span th:text="${ticket.price}"></span></p>
-    <p><strong>Loc:</strong> <span th:text="${ticket.seatNumber}"></span></p>
-</div>
+            <hr>
 
-<hr>
+            <h3>Informații Pasager</h3>
+            <div th:if="${ticket.passenger != null}">
+                <p><strong>Nume:</strong> <span th:text="${ticket.passenger.name}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${ticket.passenger.email}"></span></p>
+            </div>
+            <div th:if="${ticket.passenger == null}">
+                <p class="text-danger">Nu există pasager asociat.</p>
+            </div>
 
-<h3>Informații Pasager</h3>
-<div th:if="${ticket.passenger != null}">
-    <p><strong>Nume:</strong> <span th:text="${ticket.passenger.name}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${ticket.passenger.email}"></span></p>
+            <h3>Informații Zbor</h3>
+            <div th:if="${ticket.flight != null}">
+                <p><strong>Nr. Zbor:</strong> <span th:text="${ticket.flight.flightNumber}"></span></p>
+                <p><strong>Plecare:</strong> <span th:text="${ticket.flight.departureTime}"></span></p>
+                <p><strong>Sosire:</strong> <span th:text="${ticket.flight.arrivalTime}"></span></p>
+            </div>
+            <div th:if="${ticket.flight == null}">
+                <p class="text-danger">Nu există zbor asociat.</p>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/tickets}" class="btn btn-secondary">Înapoi</a>
+        </div>
+    </div>
 </div>
-<div th:if="${ticket.passenger == null}">
-    <p>Nu există pasager asociat.</p>
-</div>
-
-<h3>Informații Zbor</h3>
-<div th:if="${ticket.flight != null}">
-    <p><strong>Nr. Zbor:</strong> <span th:text="${ticket.flight.flightNumber}"></span></p>
-    <p><strong>Plecare:</strong> <span th:text="${ticket.flight.departureTime}"></span></p>
-    <p><strong>Sosire:</strong> <span th:text="${ticket.flight.arrivalTime}"></span></p>
-</div>
-<div th:if="${ticket.flight == null}">
-    <p>Nu există zbor asociat.</p>
-</div>
-
-<hr>
-<p><a th:href="@{/tickets}">Înapoi la Lista Bilete</a></p>
 </body>
 </html>

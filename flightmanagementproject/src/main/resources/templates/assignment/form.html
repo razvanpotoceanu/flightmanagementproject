@@ -1,36 +1,52 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="http://www.thymeleaf.org">
-<head><title>Adaugă Asignare</title></head>
-<body>
-<h1>Adaugă Asignare Nouă</h1>
-<form th:action="@{/assignments}" th:object="${assignment}" method="post">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Adaugă Asignare</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1>Adaugă Asignare Nouă</h1>
 
-    <label>Zbor:</label>
-    <select th:field="*{flight}">
-        <option value="">Alege Zbor...</option>
-        <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
-    </select>
-    <br><br>
+    <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
 
-    <h3>Selectează UN SINGUR tip de angajat:</h3>
+    <form th:action="@{/assignments}" th:object="${assignment}" method="post" class="card p-4 shadow-sm">
 
-    <label>Angajat Companie:</label>
-    <select th:field="*{airlineEmployee}">
-        <option value="">- Nimeni -</option>
-        <option th:each="e : ${airlineEmployees}" th:value="${e.id}" th:text="${e.name + ' (' + e.role + ')'}"></option>
-    </select>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">Zbor:</label>
+            <select th:field="*{flight}" class="form-select" th:classappend="${#fields.hasErrors('flight')} ? 'is-invalid' : ''">
+                <option value="">Alege Zbor...</option>
+                <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+            </select>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('flight')}" th:errors="*{flight}"></div>
+        </div>
 
-    <p>-- SAU --</p>
+        <h4 class="mt-4">Selectează UN SINGUR tip de angajat:</h4>
+        <div class="text-danger mb-2" th:if="${#fields.hasErrors('airlineEmployee')}" th:errors="*{airlineEmployee}"></div>
 
-    <label>Angajat Aeroport:</label>
-    <select th:field="*{airportEmployee}">
-        <option value="">- Nimeni -</option>
-        <option th:each="e : ${airportEmployees}" th:value="${e.id}" th:text="${e.name}"></option>
-    </select>
-    <br><br>
+        <div class="mb-3">
+            <label class="form-label">Angajat Companie:</label>
+            <select th:field="*{airlineEmployee}" class="form-select">
+                <option value="">- Nimeni -</option>
+                <option th:each="e : ${airlineEmployees}" th:value="${e.id}" th:text="${e.name + ' (' + e.role + ')'}"></option>
+            </select>
+        </div>
 
-    <button type="submit">Salvează</button>
-</form>
+        <p class="text-center fw-bold">-- SAU --</p>
+
+        <div class="mb-3">
+            <label class="form-label">Angajat Aeroport:</label>
+            <select th:field="*{airportEmployee}" class="form-select">
+                <option value="">- Nimeni -</option>
+                <option th:each="e : ${airportEmployees}" th:value="${e.id}" th:text="${e.name}"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvează</button>
+        <a th:href="@{/assignments}" class="btn btn-secondary">Înapoi</a>
+    </form>
+</div>
 </body>
 </html>

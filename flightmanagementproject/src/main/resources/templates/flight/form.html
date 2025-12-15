@@ -1,57 +1,44 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Adaugă Zbor</title>
-    <style>.error { color: red; font-size: 0.9em; }</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Adaugă un Zbor Nou</h1>
-<form th:action="@{/flights}" th:object="${flight}" method="post">
+<body class="bg-light">
+<div class="container mt-5">
+    <h1>Adaugă Zbor</h1>
+    <form th:action="@{/flights}" th:object="${flight}" method="post" class="card p-4 shadow-sm">
 
-    <div>
-        <label>Număr Zbor:</label>
-        <input type="text" th:field="*{flightNumber}">
-        <div class="error" th:if="${#fields.hasErrors('flightNumber')}" th:errors="*{flightNumber}"></div>
-    </div>
-    <br>
-    <div>
-        <label>Ora Plecare:</label>
-        <input type="text" th:field="*{departureTime}">
-        <div class="error" th:if="${#fields.hasErrors('departureTime')}" th:errors="*{departureTime}"></div>
-    </div>
-    <br>
-    <div>
-        <label>Ora Sosire:</label>
-        <input type="text" th:field="*{arrivalTime}">
-        <div class="error" th:if="${#fields.hasErrors('arrivalTime')}" th:errors="*{arrivalTime}"></div>
-    </div>
-    <br>
-    <div>
-        <label>Avion:</label>
-        <!-- Dropdown pentru obiectul Airplane -->
-        <select th:field="*{airplane}">
-            <option value="">-- Alege Avion --</option>
-            <option th:each="plane : ${airplanes}"
-                    th:value="${plane.id}"
-                    th:text="${plane.modelName + ' (Cap: ' + plane.capacity + ')'}">
-            </option>
-        </select>
-    </div>
-    <br>
-    <div>
-        <label>Panou (NoticeBoard):</label>
-        <select th:field="*{noticeBoard}">
-            <option value="">-- Alege Panou --</option>
-            <option th:each="nb : ${noticeBoards}"
-                    th:value="${nb.id}"
-                    th:text="${'Panou din: ' + nb.date}">
-            </option>
-        </select>
-    </div>
-    <br>
-    <button type="submit">Salvează Zbor</button>
-</form>
-<p><a th:href="@{/flights}">Înapoi</a></p>
+        <div class="mb-3">
+            <label class="form-label">Număr Zbor:</label>
+            <input type="text" th:field="*{flightNumber}" class="form-control" th:classappend="${#fields.hasErrors('flightNumber')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('flightNumber')}" th:errors="*{flightNumber}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ora Plecare:</label>
+            <input type="text" th:field="*{departureTime}" class="form-control" th:classappend="${#fields.hasErrors('departureTime')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('departureTime')}" th:errors="*{departureTime}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ora Sosire:</label>
+            <input type="text" th:field="*{arrivalTime}" class="form-control" th:classappend="${#fields.hasErrors('arrivalTime')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('arrivalTime')}" th:errors="*{arrivalTime}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Avion:</label>
+            <select th:field="*{airplane}" class="form-select" th:classappend="${#fields.hasErrors('airplane')} ? 'is-invalid' : ''">
+                <option value="">-- Alege Avion --</option>
+                <option th:each="plane : ${airplanes}" th:value="${plane.id}" th:text="${plane.modelName + ' (' + plane.capacity + ')'}"></option>
+            </select>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('airplane')}" th:errors="*{airplane}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvează</button>
+        <a th:href="@{/flights}" class="btn btn-secondary">Înapoi</a>
+    </form>
+</div>
 </body>
 </html>

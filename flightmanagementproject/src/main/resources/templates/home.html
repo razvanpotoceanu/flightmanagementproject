@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Flight Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .menu-card { transition: transform 0.2s; cursor: pointer; text-decoration: none; color: inherit; }
+    .menu-card:hover { transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .icon-large { font-size: 3rem; margin-bottom: 15px; color: #0d6efd; }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+  <div class="text-center mb-5">
+    <h1 class="display-4 text-primary fw-bold">Flight Management System</h1>
+    <p class="lead text-secondary">Sistem complet pentru gestionarea zborurilor și a personalului</p>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+    <!-- Card Pasageri -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/passengers}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-users icon-large"></i>
+        <h4 class="card-title">Pasageri</h4>
+        <p class="card-text text-muted">Gestionează lista de pasageri</p>
+      </a>
+    </div>
+
+    <!-- Card Avioane -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/airplanes}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-plane icon-large"></i>
+        <h4 class="card-title">Avioane</h4>
+        <p class="card-text text-muted">Gestionează flota de avioane</p>
+      </a>
+    </div>
+
+    <!-- Card Zboruri -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/flights}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-plane-departure icon-large"></i>
+        <h4 class="card-title">Zboruri</h4>
+        <p class="card-text text-muted">Programează și vizualizează zboruri</p>
+      </a>
+    </div>
+
+    <!-- Card Bilete -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/tickets}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-ticket-alt icon-large"></i>
+        <h4 class="card-title">Bilete</h4>
+        <p class="card-text text-muted">Gestionează rezervările</p>
+      </a>
+    </div>
+
+    <!-- Card Bagaje -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/luggage}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-suitcase icon-large"></i>
+        <h4 class="card-title">Bagaje</h4>
+        <p class="card-text text-muted">Urmărește statusul bagajelor</p>
+      </a>
+    </div>
+
+    <!-- Card Asignări -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/assignments}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-tasks icon-large"></i>
+        <h4 class="card-title">Asignări</h4>
+        <p class="card-text text-muted">Asignează personal la zboruri</p>
+      </a>
+    </div>
+
+    <!-- Card Staff Companie -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/airline-employees}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-user-tie icon-large"></i>
+        <h4 class="card-title">Staff Companie</h4>
+        <p class="card-text text-muted">Piloți și echipaj de bord</p>
+      </a>
+    </div>
+
+    <!-- Card Staff Aeroport -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/airport-employees}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-user-shield icon-large"></i>
+        <h4 class="card-title">Staff Aeroport</h4>
+        <p class="card-text text-muted">Securitate și logistică</p>
+      </a>
+    </div>
+
+    <!-- Card Panouri -->
+    <div class="col-md-4 col-lg-3">
+      <a th:href="@{/noticeboards}" class="card h-100 text-center p-4 menu-card border-0 shadow-sm">
+        <i class="fas fa-calendar-alt icon-large"></i>
+        <h4 class="card-title">Panouri</h4>
+        <p class="card-text text-muted">Afișaje zboruri pe zile</p>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="mt-5 text-center text-muted py-3">
+  <small>&copy; 2025 Flight Management System</small>
+</footer>
+
+</body>
+</html>

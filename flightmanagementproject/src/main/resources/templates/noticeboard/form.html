@@ -1,12 +1,23 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
-<head><title>Adaugă Panou</title></head>
-<body>
-<h1>Adaugă Panou</h1>
-<form th:action="@{/noticeboards}" th:object="${noticeboard}" method="post">
-    <label>Data:</label>
-    <input type="date" th:field="*{date}" required>
-    <br><br>
-    <button type="submit">Salvează</button>
-</form>
-</body></html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Adaugă Panou</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1>Adaugă Panou Nou</h1>
+    <form th:action="@{/noticeboards}" th:object="${noticeboard}" method="post" class="card p-4 shadow-sm">
+
+        <div class="mb-3">
+            <label class="form-label">Data Panoului:</label>
+            <input type="date" th:field="*{date}" class="form-control" th:classappend="${#fields.hasErrors('date')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvează</button>
+        <a th:href="@{/noticeboards}" class="btn btn-secondary">Înapoi</a>
+    </form>
+</div>
+</body>
+</html>

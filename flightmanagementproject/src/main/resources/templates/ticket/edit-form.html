@@ -1,67 +1,51 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Editează Bilet</title>
-    <style>.error { color: red; font-size: 0.9em; }</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Editează Bilet</h1>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1>Editează Bilet</h1>
 
-<form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" th:object="${ticket}" method="post">
+    <form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" th:object="${ticket}" method="post" class="card p-4 shadow-sm">
 
-    <!-- ID Readonly -->
-    <div>
-        <label>ID:</label>
-        <input type="text" th:field="*{id}" readonly style="background-color: #eee;">
-    </div>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">ID:</label>
+            <input type="text" th:field="*{id}" readonly class="form-control bg-light">
+        </div>
 
-    <!-- Loc -->
-    <div>
-        <label>Loc:</label>
-        <input type="text" th:field="*{seatNumber}">
-        <div class="error" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}">Eroare Loc</div>
-    </div>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">Loc:</label>
+            <input type="text" th:field="*{seatNumber}" class="form-control" th:classappend="${#fields.hasErrors('seatNumber')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}"></div>
+        </div>
 
-    <!-- Preț -->
-    <div>
-        <label>Preț:</label>
-        <input type="number" step="0.01" th:field="*{price}">
-        <div class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Eroare Preț</div>
-    </div>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">Preț:</label>
+            <input type="number" step="0.01" th:field="*{price}" class="form-control" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
 
-    <!-- Pasager Dropdown -->
-    <div>
-        <label>Pasager:</label>
-        <select th:field="*{passenger}">
-            <!-- Opțiunea curentă selectată automat de Thymeleaf pe baza ID-ului -->
-            <option th:each="p : ${passengers}"
-                    th:value="${p.id}"
-                    th:text="${p.name + ' (' + p.email + ')'}">
-            </option>
-        </select>
-        <div class="error" th:if="${#fields.hasErrors('passenger')}" th:errors="*{passenger}">Eroare Pasager</div>
-    </div>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">Pasager:</label>
+            <select th:field="*{passenger}" class="form-select" th:classappend="${#fields.hasErrors('passenger')} ? 'is-invalid' : ''">
+                <option th:each="p : ${passengers}" th:value="${p.id}" th:text="${p.name}"></option>
+            </select>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('passenger')}" th:errors="*{passenger}"></div>
+        </div>
 
-    <!-- Zbor Dropdown -->
-    <div>
-        <label>Zbor:</label>
-        <select th:field="*{flight}">
-            <option th:each="f : ${flights}"
-                    th:value="${f.id}"
-                    th:text="${f.flightNumber + ' (' + f.departureTime + ')'}">
-            </option>
-        </select>
-        <div class="error" th:if="${#fields.hasErrors('flight')}" th:errors="*{flight}">Eroare Zbor</div>
-    </div>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">Zbor:</label>
+            <select th:field="*{flight}" class="form-select" th:classappend="${#fields.hasErrors('flight')} ? 'is-invalid' : ''">
+                <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+            </select>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('flight')}" th:errors="*{flight}"></div>
+        </div>
 
-    <button type="submit">Actualizează Bilet</button>
-</form>
-
-<p><a th:href="@{/tickets}">Anulează</a></p>
+        <button type="submit" class="btn btn-warning">Actualizează</button>
+        <a th:href="@{/tickets}" class="btn btn-secondary">Anulează</a>
+    </form>
+</div>
 </body>
 </html>

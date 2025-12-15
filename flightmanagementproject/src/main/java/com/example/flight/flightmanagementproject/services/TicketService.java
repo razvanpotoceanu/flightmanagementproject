@@ -6,6 +6,7 @@ import com.example.flight.flightmanagementproject.repositories.FlightRepository;
 import com.example.flight.flightmanagementproject.repositories.PassengerRepository;
 import com.example.flight.flightmanagementproject.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,10 +28,23 @@ public class TicketService {
         this.flightRepository = flightRepository;
     }
 
+
+
+    // --- METODA NOUĂ (Folosită de TicketController) ---
+    public List<Ticket> getAllTickets(String keyword, String sortField, String sortDir) {
+        if (sortField == null || sortField.isEmpty()) sortField = "id";
+        Sort sort = Sort.by(sortField);
+        sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
+
+        if (keyword != null && !keyword.isEmpty()) {
+            return repository.search(keyword, sort);
+        }
+        return repository.findAll(sort);
+    }
+    // --------------------------------------------------
     public List<Ticket> getAllTickets() {
         return repository.findAll();
     }
-
     public Ticket getTicketById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bilet nu a fost găsit cu id: " + id));

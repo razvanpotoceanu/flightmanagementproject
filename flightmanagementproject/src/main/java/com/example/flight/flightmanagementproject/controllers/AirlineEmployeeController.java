@@ -22,12 +22,27 @@ public class AirlineEmployeeController {
         this.service = service;
     }
 
+    // 1. LISTARE (Cu Sortare și Filtrare - Proiect 5)
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("employees", service.getAll());
+    public String list(
+            Model model,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        // Apelăm service-ul cu parametrii de căutare și sortare
+        model.addAttribute("employees", service.getAll(keyword, sortField, sortDir));
+
+        // Trimitem parametrii înapoi la View
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
         return "airline-employee/index";
     }
 
+    // 2. FORMULAR CREARE
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("employee", new AirlineEmployee());
@@ -35,16 +50,26 @@ public class AirlineEmployeeController {
         return "airline-employee/form";
     }
 
+    // 3. SALVARE
     @PostMapping
     public String add(@Valid @ModelAttribute("employee") AirlineEmployee employee, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("roles", AirlineEmployeeRole.values());
             return "airline-employee/form";
         }
-        service.save(employee);
+
+        try {
+            service.save(employee);
+        } catch (IllegalArgumentException e) {
+            result.rejectValue("name", "error.employee", e.getMessage());
+            model.addAttribute("roles", AirlineEmployeeRole.values());
+            return "airline-employee/form";
+        }
+
         return "redirect:/airline-employees";
     }
 
+    // 4. FORMULAR EDITARE
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         try {
@@ -56,23 +81,35 @@ public class AirlineEmployeeController {
         }
     }
 
+    // 5. UPDATE
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id, @Valid @ModelAttribute("employee") AirlineEmployee employee, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("roles", AirlineEmployeeRole.values());
             employee.setId(id);
+            model.addAttribute("roles", AirlineEmployeeRole.values());
             return "airline-employee/edit-form";
         }
-        service.update(id, employee);
+
+        try {
+            service.update(id, employee);
+        } catch (IllegalArgumentException e) {
+            result.rejectValue("name", "error.employee", e.getMessage());
+            employee.setId(id);
+            model.addAttribute("roles", AirlineEmployeeRole.values());
+            return "airline-employee/edit-form";
+        }
+
         return "redirect:/airline-employees";
     }
 
+    // 6. ȘTERGERE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         service.delete(id);
         return "redirect:/airline-employees";
     }
 
+    // 7. DETALII
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
         try {

@@ -27,29 +27,57 @@ public class TicketController {
         this.flightService = flightService;
     }
 
+    // 1. LISTARE (Cu Sortare și Filtrare - Proiect 5)
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("tickets", ticketService.getAllTickets());
+    public String list(
+            Model model,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        // Apelăm service-ul actualizat care suportă sortarea și filtrarea
+        // (Asigură-te că TicketService are această metodă, vezi mai jos)
+        model.addAttribute("tickets", ticketService.getAllTickets(keyword, sortField, sortDir));
+
+        // Trimitem parametrii înapoi la View pentru a păstra starea
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
         return "ticket/index";
     }
 
+    // 2. FORMULAR CREARE
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("ticket", new Ticket());
-        populateDropdowns(model);
+        populateDropdowns(model); // Populăm dropdown-urile
         return "ticket/form";
     }
 
+    // 3. SALVARE
     @PostMapping
     public String addTicket(@Valid @ModelAttribute Ticket ticket, BindingResult result, Model model) {
+        // Validare standard
         if (result.hasErrors()) {
             populateDropdowns(model);
             return "ticket/form";
         }
-        ticketService.saveTicket(ticket);
+
+        // Validare Business
+        try {
+            ticketService.saveTicket(ticket);
+        } catch (IllegalArgumentException e) {
+            handleBusinessException(e, result);
+            populateDropdowns(model);
+            return "ticket/form";
+        }
+
         return "redirect:/tickets";
     }
 
+    // 4. FORMULAR EDITARE
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         try {
@@ -61,6 +89,7 @@ public class TicketController {
         }
     }
 
+    // 5. UPDATE
     @PostMapping("/{id}/edit")
     public String updateTicket(@PathVariable Long id, @Valid @ModelAttribute Ticket ticket, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -68,16 +97,27 @@ public class TicketController {
             populateDropdowns(model);
             return "ticket/edit-form";
         }
-        ticketService.updateTicket(id, ticket);
+
+        try {
+            ticketService.updateTicket(id, ticket);
+        } catch (IllegalArgumentException e) {
+            handleBusinessException(e, result);
+            ticket.setId(id);
+            populateDropdowns(model);
+            return "ticket/edit-form";
+        }
+
         return "redirect:/tickets";
     }
 
+    // 6. ȘTERGERE
     @PostMapping("/{id}/delete")
     public String deleteTicket(@PathVariable Long id) {
         ticketService.deleteTicket(id);
         return "redirect:/tickets";
     }
 
+    // 7. DETALII
     @GetMapping("/{id}")
     public String getDetails(@PathVariable Long id, Model model) {
         try {
@@ -90,7 +130,23 @@ public class TicketController {
 
     // Metodă helper pentru a evita duplicarea codului
     private void populateDropdowns(Model model) {
+        // Folosim metodele findAll() (fără parametri) din celelalte servicii
         model.addAttribute("passengers", passengerService.getAllPassengers());
         model.addAttribute("flights", flightService.getAllFlights());
+    }
+
+    // Metodă helper pentru a mapa mesajele de eroare
+    private void handleBusinessException(IllegalArgumentException e, BindingResult result) {
+        String msg = e.getMessage();
+        if (msg.contains("pasager")) {
+            result.rejectValue("passenger", "error.ticket", msg);
+        } else if (msg.contains("zbor")) {
+            result.rejectValue("flight", "error.ticket", msg);
+        } else if (msg.contains("Prețul") || msg.contains("Locul")) {
+            // Erori generale legate de câmpuri, deși @Valid prinde majoritatea
+            result.reject("error.ticket", msg);
+        } else {
+            result.reject("error.ticket", msg);
+        }
     }
 }

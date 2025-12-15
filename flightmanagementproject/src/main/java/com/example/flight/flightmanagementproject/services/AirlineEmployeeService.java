@@ -4,6 +4,7 @@ import com.example.flight.flightmanagementproject.exceptions.ResourceNotFoundExc
 import com.example.flight.flightmanagementproject.models.AirlineEmployee;
 import com.example.flight.flightmanagementproject.repositories.AirlineEmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,17 @@ public class AirlineEmployeeService {
     public AirlineEmployeeService(AirlineEmployeeRepository repository) {
         this.repository = repository;
     }
+    public List<AirlineEmployee> getAll(String keyword, String sortField, String sortDir) {
+        if (sortField == null || sortField.isEmpty()) sortField = "id";
+        Sort sort = Sort.by(sortField);
+        sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
 
+        if (keyword != null && !keyword.isEmpty()) {
+            // Asigură-te că repository are metoda findByNameContainingIgnoreCase
+            return repository.findByNameContainingIgnoreCase(keyword, sort);
+        }
+        return repository.findAll(sort);
+    }
     public List<AirlineEmployee> getAll() {
         return repository.findAll();
     }

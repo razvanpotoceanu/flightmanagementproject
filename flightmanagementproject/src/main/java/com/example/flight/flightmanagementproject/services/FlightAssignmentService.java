@@ -7,6 +7,7 @@ import com.example.flight.flightmanagementproject.repositories.AirportEmployeeRe
 import com.example.flight.flightmanagementproject.repositories.FlightAssignmentRepository;
 import com.example.flight.flightmanagementproject.repositories.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,20 @@ public class FlightAssignmentService {
         this.airlineEmployeeRepository = airlineEmployeeRepository;
         this.airportEmployeeRepository = airportEmployeeRepository;
     }
+
+    // --- METODA NOUĂ ---
+    public List<FlightAssignment> getAllFlightAssignments(String keyword, String sortField, String sortDir) {
+        if (sortField == null || sortField.isEmpty()) sortField = "id";
+        Sort sort = Sort.by(sortField);
+        sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
+
+        // Căutarea complexă (trebuie să ai metoda search în repo)
+        if (keyword != null && !keyword.isEmpty()) {
+            return repository.search(keyword, sort);
+        }
+        return repository.findAll(sort);
+    }
+    // -------------------
 
     public List<FlightAssignment> getAllFlightAssignments() {
         return repository.findAll();
@@ -102,4 +117,5 @@ public class FlightAssignmentService {
         }
         repository.deleteById(id);
     }
+
 }

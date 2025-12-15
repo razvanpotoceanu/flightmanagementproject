@@ -1,38 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Adaugă Angajat</title>
-    <style>.error { color: red; font-size: 0.9em; }</style>
+    <title>Adaugă Angajat Aeroport</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Adaugă Angajat Aeroport</h1>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1>Adaugă Angajat Aeroport</h1>
+    <form th:action="@{/airport-employees}" th:object="${employee}" method="post" class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label class="form-label">Nume:</label>
+            <input type="text" th:field="*{name}" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
 
-<form th:action="@{/airport-employees}" th:object="${employee}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Funcție (Designation):</label>
+            <input type="text" th:field="*{designation}" class="form-control" th:classappend="${#fields.hasErrors('designation')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></div>
+        </div>
 
-    <div>
-        <label>Nume:</label>
-        <input type="text" th:field="*{name}">
-        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-    </div>
-    <br>
+        <div class="mb-3">
+            <label class="form-label">Departament:</label>
+            <input type="text" th:field="*{department}" class="form-control" th:classappend="${#fields.hasErrors('department')} ? 'is-invalid' : ''">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></div>
+        </div>
 
-    <div>
-        <label>Funcție (Designation):</label>
-        <input type="text" th:field="*{designation}">
-        <div class="error" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></div>
-    </div>
-    <br>
-
-    <div>
-        <label>Departament:</label>
-        <input type="text" th:field="*{department}">
-        <div class="error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></div>
-    </div>
-    <br>
-
-    <button type="submit">Salvează</button>
-</form>
-
-<p><a th:href="@{/airport-employees}">Înapoi</a></p>
+        <button type="submit" class="btn btn-primary">Salvează</button>
+        <a th:href="@{/airport-employees}" class="btn btn-secondary">Înapoi</a>
+    </form>
+</div>
 </body>
 </html>

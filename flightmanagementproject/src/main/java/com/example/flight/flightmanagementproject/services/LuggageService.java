@@ -5,6 +5,7 @@ import com.example.flight.flightmanagementproject.models.Luggage;
 import com.example.flight.flightmanagementproject.repositories.LuggageRepository;
 import com.example.flight.flightmanagementproject.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.List;
 public class LuggageService {
 
     private final LuggageRepository repository;
-    // Avem nevoie de TicketRepository pentru a valida existența biletului
     private final TicketRepository ticketRepository;
 
     @Autowired
@@ -22,34 +22,39 @@ public class LuggageService {
         this.ticketRepository = ticketRepository;
     }
 
+    // --- METODA NOUĂ PENTRU PROIECTUL 5 ---
+    public List<Luggage> getAllLuggages(String keyword, String sortField, String sortDir) {
+        if (sortField == null || sortField.isEmpty()) sortField = "id";
+        Sort sort = Sort.by(sortField);
+        sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
+
+        return repository.search(keyword, sort);
+    }
+    // --------------------------------------
+
+    // Metoda veche (compatibilitate)
     public List<Luggage> getAllLuggages() {
         return repository.findAll();
     }
 
     public Luggage getLuggageById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bagajul nu a fost găsit cu id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Luggage not found with id: " + id));
     }
 
     public void saveLuggage(Luggage luggage) {
-        // VALIDARE: Status obligatoriu
         if (luggage.getStatus() == null) {
             throw new IllegalArgumentException("Statusul bagajului este obligatoriu.");
         }
-
-        // VALIDARE: Biletul asociat trebuie să existe în DB
         if (luggage.getTicket() == null || luggage.getTicket().getId() == null) {
             throw new IllegalArgumentException("Trebuie selectat un bilet valid.");
         }
         if (!ticketRepository.existsById(luggage.getTicket().getId())) {
             throw new IllegalArgumentException("Biletul selectat nu există în baza de date.");
         }
-
-        // VALIDARE ID: Prevenire duplicat la creare
         if (luggage.getId() != null && repository.existsById(luggage.getId())) {
-            throw new IllegalArgumentException("Există deja un bagaj cu ID-ul " + luggage.getId() + ".");
+            throw new IllegalArgumentException("Există deja un bagaj cu acest ID.");
         }
-
         repository.save(luggage);
     }
 
@@ -57,17 +62,9 @@ public class LuggageService {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Nu se poate actualiza. Bagaj negăsit cu ID: " + id);
         }
-
-        // Validare relație Bilet la update
+        // Validare relații la update
         if (updatedLuggage.getTicket() == null || updatedLuggage.getTicket().getId() == null) {
             throw new IllegalArgumentException("Trebuie selectat un bilet valid.");
-        }
-        if (!ticketRepository.existsById(updatedLuggage.getTicket().getId())) {
-            throw new IllegalArgumentException("Biletul selectat nu există.");
-        }
-
-        if (updatedLuggage.getStatus() == null) {
-            throw new IllegalArgumentException("Statusul bagajului este obligatoriu.");
         }
 
         Luggage existing = getLuggageById(id);
@@ -79,7 +76,7 @@ public class LuggageService {
 
     public void deleteLuggage(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Nu se poate șterge. Bagaj negăsit cu ID: " + id);
+            throw new ResourceNotFoundException("Luggage not found with id: " + id);
         }
         repository.deleteById(id);
     }

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-light">
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
         <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-plane"></i> FlightApp</a>
@@ -31,6 +32,7 @@
         </div>
     </div>
 </nav>
+
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-primary">Staff Companie Aeriană</h1>
@@ -43,7 +45,8 @@
     <!-- Formular de Filtrare -->
     <form th:action="@{/airline-employees}" method="get" class="card p-3 mb-4 shadow-sm">
         <div class="input-group">
-            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Caută după nume...">
+            <!-- Placeholder actualizat -->
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Caută după nume sau rol...">
             <input type="hidden" name="sortField" th:value="${sortField}">
             <input type="hidden" name="sortDir" th:value="${sortDir}">
             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Caută</button>
@@ -65,7 +68,12 @@
                         Nume <i th:if="${sortField == 'name'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
                     </a>
                 </th>
-                <th>Rol</th>
+                <th>
+                    <!-- Link de sortare pentru ROL -->
+                    <a th:href="@{/airline-employees(sortField='role', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
+                        Rol <i th:if="${sortField == 'role'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
+                    </a>
+                </th>
                 <th>Acțiuni</th>
             </tr>
             </thead>

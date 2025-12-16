@@ -15,7 +15,6 @@ import java.util.List;
 public class TicketService {
 
     private final TicketRepository repository;
-    // Avem nevoie de aceste repo-uri pentru a valida existența FK
     private final PassengerRepository passengerRepository;
     private final FlightRepository flightRepository;
 
@@ -28,23 +27,22 @@ public class TicketService {
         this.flightRepository = flightRepository;
     }
 
-
-
-    // --- METODA NOUĂ (Folosită de TicketController) ---
+    // --- METODA NOUĂ PENTRU PROIECTUL 5 (Sortare & Filtrare) ---
     public List<Ticket> getAllTickets(String keyword, String sortField, String sortDir) {
         if (sortField == null || sortField.isEmpty()) sortField = "id";
         Sort sort = Sort.by(sortField);
         sort = "desc".equals(sortDir) ? sort.descending() : sort.ascending();
 
-        if (keyword != null && !keyword.isEmpty()) {
-            return repository.search(keyword, sort);
-        }
-        return repository.findAll(sort);
+        // Folosim metoda de căutare din Repository
+        return repository.search(keyword, sort);
     }
-    // --------------------------------------------------
+    // -----------------------------------------------------------
+
+    // Metoda veche (pentru compatibilitate, folosită la popularea dropdown-urilor din alte părți, dacă e cazul)
     public List<Ticket> getAllTickets() {
         return repository.findAll();
     }
+
     public Ticket getTicketById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bilet nu a fost găsit cu id: " + id));
@@ -53,7 +51,7 @@ public class TicketService {
     public void saveTicket(Ticket ticket) {
         validateTicket(ticket);
 
-        // Validare ID
+        // Validare ID la creare
         if (ticket.getId() != null && repository.existsById(ticket.getId())) {
             throw new IllegalArgumentException("Există deja un bilet cu acest ID.");
         }

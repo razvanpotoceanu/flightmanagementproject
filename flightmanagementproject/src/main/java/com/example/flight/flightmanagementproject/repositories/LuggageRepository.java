@@ -12,7 +12,6 @@ import java.util.List;
 @Repository
 public interface LuggageRepository extends JpaRepository<Luggage, Long> {
 
-    // Căutare după ID-ul biletului (convertit în string) sau Status sau Locul de pe bilet
     @Query("SELECT l FROM Luggage l " +
             "LEFT JOIN l.ticket t " +
             "WHERE :keyword IS NULL OR :keyword = '' OR " +

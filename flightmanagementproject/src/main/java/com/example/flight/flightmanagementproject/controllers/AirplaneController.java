@@ -25,7 +25,10 @@ public class AirplaneController {
             @RequestParam(defaultValue = "id") String sortField,
             @RequestParam(defaultValue = "asc") String sortDir) {
 
+        // Apelăm metoda actualizată din service
         model.addAttribute("airplanes", service.getAllAirplanes(keyword, sortField, sortDir));
+
+        // Trimitem parametrii înapoi la View
         model.addAttribute("keyword", keyword);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
@@ -34,11 +37,52 @@ public class AirplaneController {
         return "airplane/index";
     }
 
-    // ... restul metodelor rămân la fel ca înainte ...
-    @GetMapping("/new") public String showAddForm(Model model) { model.addAttribute("airplane", new Airplane()); return "airplane/form"; }
-    @PostMapping public String addAirplane(@Valid @ModelAttribute Airplane a, BindingResult r) { if (r.hasErrors()) return "airplane/form"; service.saveAirplane(a); return "redirect:/airplanes"; }
-    @GetMapping("/{id}/edit") public String showEditForm(@PathVariable Long id, Model model) { try { model.addAttribute("airplane", service.getAirplaneById(id)); return "airplane/edit-form"; } catch (ResourceNotFoundException e) { return "redirect:/airplanes"; } }
-    @PostMapping("/{id}/edit") public String updateAirplane(@PathVariable Long id, @Valid @ModelAttribute Airplane a, BindingResult r) { if (r.hasErrors()) { a.setId(id); return "airplane/edit-form"; } service.updateAirplane(id, a); return "redirect:/airplanes"; }
-    @PostMapping("/{id}/delete") public String deleteAirplane(@PathVariable Long id) { service.deleteAirplane(id); return "redirect:/airplanes"; }
-    @GetMapping("/{id}") public String getDetails(@PathVariable Long id, Model model) { try { model.addAttribute("airplane", service.getAirplaneById(id)); return "airplane/details"; } catch (ResourceNotFoundException e) { return "redirect:/airplanes"; } }
+    @GetMapping("/new")
+    public String showAddForm(Model model) {
+        model.addAttribute("airplane", new Airplane());
+        return "airplane/form";
+    }
+
+    @PostMapping
+    public String addAirplane(@Valid @ModelAttribute Airplane a, BindingResult r) {
+        if (r.hasErrors()) return "airplane/form";
+        service.saveAirplane(a);
+        return "redirect:/airplanes";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("airplane", service.getAirplaneById(id));
+            return "airplane/edit-form";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/airplanes";
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateAirplane(@PathVariable Long id, @Valid @ModelAttribute Airplane a, BindingResult r) {
+        if (r.hasErrors()) {
+            a.setId(id);
+            return "airplane/edit-form";
+        }
+        service.updateAirplane(id, a);
+        return "redirect:/airplanes";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteAirplane(@PathVariable Long id) {
+        service.deleteAirplane(id);
+        return "redirect:/airplanes";
+    }
+
+    @GetMapping("/{id}")
+    public String getDetails(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("airplane", service.getAirplaneById(id));
+            return "airplane/details";
+        } catch (ResourceNotFoundException e) {
+            return "redirect:/airplanes";
+        }
+    }
 }

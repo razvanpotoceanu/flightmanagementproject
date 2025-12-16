@@ -25,7 +25,7 @@
             <label class="form-label">Pasager:</label>
             <select th:field="*{passenger}" class="form-select" th:classappend="${#fields.hasErrors('passenger')} ? 'is-invalid' : ''">
                 <option value="">-- Alege Pasager --</option>
-                <option th:each="p : ${passengers}" th:value="${p.id}" th:text="${p.name}"></option>
+                <option th:each="p : ${passengers}" th:value="${p.id}" th:text="${p.name + ' (' + p.email + ')'}"></option>
             </select>
             <div class="invalid-feedback" th:if="${#fields.hasErrors('passenger')}" th:errors="*{passenger}"></div>
         </div>
@@ -34,7 +34,7 @@
             <label class="form-label">Zbor:</label>
             <select th:field="*{flight}" class="form-select" th:classappend="${#fields.hasErrors('flight')} ? 'is-invalid' : ''">
                 <option value="">-- Alege Zbor --</option>
-                <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber}"></option>
+                <option th:each="f : ${flights}" th:value="${f.id}" th:text="${f.flightNumber + ' (' + f.departureTime + ')'}"></option>
             </select>
             <div class="invalid-feedback" th:if="${#fields.hasErrors('flight')}" th:errors="*{flight}"></div>
         </div>

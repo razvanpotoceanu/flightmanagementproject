@@ -57,28 +57,45 @@
         <table class="table table-striped table-hover mb-0">
             <thead class="table-dark">
             <tr>
+                <!-- Sortare după ID -->
                 <th>
                     <a th:href="@{/luggage(sortField='id', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
                         ID <i th:if="${sortField == 'id'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
                     </a>
                 </th>
-                <th>Bilet (Pasager)</th>
-                <th>Status</th>
+
+                <!-- Sortare după Bilet (folosind locul) -->
+                <th>
+                    <a th:href="@{/luggage(sortField='ticket.seatNumber', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
+                        Bilet (Loc) <i th:if="${sortField == 'ticket.seatNumber'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
+                    </a>
+                </th>
+
+                <!-- Sortare după Status -->
+                <th>
+                    <a th:href="@{/luggage(sortField='status', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
+                        Status <i th:if="${sortField == 'status'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
+                    </a>
+                </th>
+
                 <th>Acțiuni</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="luggage : ${luggages}">
                 <td th:text="${luggage.id}"></td>
-                <td th:text="${luggage.ticket != null ? ('Bilet #' + luggage.ticket.id + ' - ' + (luggage.ticket.passenger != null ? luggage.ticket.passenger.name : 'Fără Pasager')) : 'Fără Bilet'}"></td>
                 <td>
-                        <span th:class="'badge ' +
-                            (${luggage.status.name() == 'CHECKED_IN' ? 'bg-primary' :
-                             (luggage.status.name() == 'LOADED' ? 'bg-info' :
-                             (luggage.status.name() == 'DELIVERED' ? 'bg-success' :
-                             (luggage.status.name() == 'LOST' ? 'bg-danger' : 'bg-secondary')))})"
-                              th:text="${luggage.status}">
-                        </span>
+                    <!-- Link către detaliile biletului sau text simplu -->
+                    <span th:text="${luggage.ticket != null ? ('Bilet #' + luggage.ticket.id + ' - ' + (luggage.ticket.passenger != null ? luggage.ticket.passenger.name : 'Fără Pasager') + ' (Loc: ' + luggage.ticket.seatNumber + ')') : 'Fără Bilet'}"></span>
+                </td>
+                <td>
+                    <span th:class="'badge ' +
+                        (${luggage.status.name() == 'CHECKED_IN' ? 'bg-primary' :
+                         (luggage.status.name() == 'LOADED' ? 'bg-info' :
+                         (luggage.status.name() == 'DELIVERED' ? 'bg-success' :
+                         (luggage.status.name() == 'LOST' ? 'bg-danger' : 'bg-secondary')))})"
+                          th:text="${luggage.status}">
+                    </span>
                 </td>
                 <td>
                     <a th:href="@{/luggage/{id}(id=${luggage.id})}" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>

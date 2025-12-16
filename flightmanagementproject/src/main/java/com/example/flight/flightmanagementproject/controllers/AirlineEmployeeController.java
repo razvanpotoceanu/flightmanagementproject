@@ -30,10 +30,9 @@ public class AirlineEmployeeController {
             @RequestParam(defaultValue = "id") String sortField,
             @RequestParam(defaultValue = "asc") String sortDir) {
 
-        // Apelăm service-ul cu parametrii de căutare și sortare
+        // Service-ul caută acum și după rol
         model.addAttribute("employees", service.getAll(keyword, sortField, sortDir));
 
-        // Trimitem parametrii înapoi la View
         model.addAttribute("keyword", keyword);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
@@ -85,8 +84,8 @@ public class AirlineEmployeeController {
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id, @Valid @ModelAttribute("employee") AirlineEmployee employee, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            employee.setId(id);
             model.addAttribute("roles", AirlineEmployeeRole.values());
+            employee.setId(id);
             return "airline-employee/edit-form";
         }
 

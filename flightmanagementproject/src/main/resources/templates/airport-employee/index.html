@@ -44,10 +44,11 @@
         </div>
     </div>
 
-    <!-- Filtrare -->
+    <!-- Filtrare Actualizată -->
     <form th:action="@{/airport-employees}" method="get" class="card p-3 mb-4 shadow-sm">
         <div class="input-group">
-            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Caută după nume...">
+            <!-- Placeholder actualizat -->
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Caută după nume sau departament...">
             <input type="hidden" name="sortField" th:value="${sortField}">
             <input type="hidden" name="sortDir" th:value="${sortDir}">
             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Caută</button>
@@ -69,7 +70,12 @@
                         Nume <i th:if="${sortField == 'name'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
                     </a>
                 </th>
-                <th>Departament</th>
+                <th>
+                    <!-- Sortare după Departament -->
+                    <a th:href="@{/airport-employees(sortField='department', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
+                        Departament <i th:if="${sortField == 'department'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
+                    </a>
+                </th>
                 <th>Funcție</th>
                 <th>Acțiuni</th>
             </tr>

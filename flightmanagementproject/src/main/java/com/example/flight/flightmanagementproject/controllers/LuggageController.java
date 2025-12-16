@@ -25,7 +25,7 @@ public class LuggageController {
         this.ticketService = ticketService;
     }
 
-    // 1. LISTARE (Cu Sortare și Filtrare - Proiect 5)
+    // 1. LISTARE (Cu Sortare și Filtrare)
     @GetMapping
     public String list(
             Model model,
@@ -43,7 +43,6 @@ public class LuggageController {
         return "luggage/index";
     }
 
-    // 2. FORMULAR CREARE
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("luggage", new Luggage());
@@ -51,27 +50,22 @@ public class LuggageController {
         return "luggage/form";
     }
 
-    // 3. SALVARE
     @PostMapping
     public String addLuggage(@Valid @ModelAttribute Luggage luggage, BindingResult result, Model model) {
         if (result.hasErrors()) {
             populateDropdowns(model);
             return "luggage/form";
         }
-
         try {
             service.saveLuggage(luggage);
         } catch (IllegalArgumentException e) {
-            // Putem atașa eroarea la câmpul 'ticket' sau global
             result.rejectValue("ticket", "error.luggage", e.getMessage());
             populateDropdowns(model);
             return "luggage/form";
         }
-
         return "redirect:/luggage";
     }
 
-    // 4. FORMULAR EDITARE
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         try {
@@ -83,7 +77,6 @@ public class LuggageController {
         }
     }
 
-    // 5. UPDATE
     @PostMapping("/{id}/edit")
     public String updateLuggage(@PathVariable Long id, @Valid @ModelAttribute Luggage luggage, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -91,7 +84,6 @@ public class LuggageController {
             populateDropdowns(model);
             return "luggage/edit-form";
         }
-
         try {
             service.updateLuggage(id, luggage);
         } catch (IllegalArgumentException e) {
@@ -100,18 +92,15 @@ public class LuggageController {
             populateDropdowns(model);
             return "luggage/edit-form";
         }
-
         return "redirect:/luggage";
     }
 
-    // 6. ȘTERGERE
     @PostMapping("/{id}/delete")
     public String deleteLuggage(@PathVariable Long id) {
         service.deleteLuggage(id);
         return "redirect:/luggage";
     }
 
-    // 7. DETALII
     @GetMapping("/{id}")
     public String getDetails(@PathVariable Long id, Model model) {
         try {
@@ -122,7 +111,6 @@ public class LuggageController {
         }
     }
 
-    // Metodă helper pentru a popula dropdown-urile
     private void populateDropdowns(Model model) {
         model.addAttribute("tickets", ticketService.getAllTickets());
         model.addAttribute("statuses", LuggageStatus.values());

@@ -35,11 +35,10 @@ public class TicketController {
             @RequestParam(defaultValue = "id") String sortField,
             @RequestParam(defaultValue = "asc") String sortDir) {
 
-        // Apelăm service-ul actualizat care suportă sortarea și filtrarea
-        // (Asigură-te că TicketService are această metodă, vezi mai jos)
+        // Apelăm metoda nouă din Service care acceptă parametri
         model.addAttribute("tickets", ticketService.getAllTickets(keyword, sortField, sortDir));
 
-        // Trimitem parametrii înapoi la View pentru a păstra starea
+        // Trimitem parametrii înapoi la View
         model.addAttribute("keyword", keyword);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
@@ -128,23 +127,20 @@ public class TicketController {
         }
     }
 
-    // Metodă helper pentru a evita duplicarea codului
+    // Metodă helper pentru a popula dropdown-urile
+    // Folosește metodele getAll...() fără parametri din serviciile externe (asigură-te că există)
     private void populateDropdowns(Model model) {
-        // Folosim metodele findAll() (fără parametri) din celelalte servicii
         model.addAttribute("passengers", passengerService.getAllPassengers());
         model.addAttribute("flights", flightService.getAllFlights());
     }
 
-    // Metodă helper pentru a mapa mesajele de eroare
+    // Metodă helper pentru maparea erorilor
     private void handleBusinessException(IllegalArgumentException e, BindingResult result) {
         String msg = e.getMessage();
         if (msg.contains("pasager")) {
             result.rejectValue("passenger", "error.ticket", msg);
         } else if (msg.contains("zbor")) {
             result.rejectValue("flight", "error.ticket", msg);
-        } else if (msg.contains("Prețul") || msg.contains("Locul")) {
-            // Erori generale legate de câmpuri, deși @Valid prinde majoritatea
-            result.reject("error.ticket", msg);
         } else {
             result.reject("error.ticket", msg);
         }

@@ -21,7 +21,7 @@ public class AirportEmployeeController {
         this.service = service;
     }
 
-    // 1. LISTARE (Cu Sortare și Filtrare - Proiect 5)
+    // 1. LISTARE (Cu Sortare și Filtrare)
     @GetMapping
     public String list(
             Model model,
@@ -29,7 +29,10 @@ public class AirportEmployeeController {
             @RequestParam(defaultValue = "id") String sortField,
             @RequestParam(defaultValue = "asc") String sortDir) {
 
+        // Apelăm service-ul cu parametrii de căutare
         model.addAttribute("employees", service.getAll(keyword, sortField, sortDir));
+
+        // Trimitem parametrii înapoi la View
         model.addAttribute("keyword", keyword);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);

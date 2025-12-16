@@ -8,31 +8,6 @@
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-plane"></i> FlightApp</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/passengers}">Pasageri</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/flights}">Zboruri</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/airplanes}">Avioane</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/tickets}">Bilete</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/assignments}">Asignări</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Staff</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" th:href="@{/airline-employees}">Companie</a></li>
-                        <li><a class="dropdown-item" th:href="@{/airport-employees}">Aeroport</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-primary">Management Bilete</h1>
@@ -42,13 +17,31 @@
         </div>
     </div>
 
-    <!-- Nu am implementat filtrare complexă aici încă, dar punem sortarea -->
+    <!-- Formular Filtrare -->
+    <form th:action="@{/tickets}" method="get" class="card p-3 mb-4 shadow-sm">
+        <div class="input-group">
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Caută după loc sau nume pasager...">
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Caută</button>
+            <a th:href="@{/tickets}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </form>
+
     <div class="card shadow-sm">
         <table class="table table-striped table-hover mb-0">
             <thead class="table-dark">
             <tr>
-                <th>ID</th>
-                <th>Loc</th>
+                <th>
+                    <a th:href="@{/tickets(sortField='id', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
+                        ID <i th:if="${sortField == 'id'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/tickets(sortField='seatNumber', sortDir=${reverseSortDir}, keyword=${keyword})}" class="text-white text-decoration-none">
+                        Loc <i th:if="${sortField == 'seatNumber'}" th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></i>
+                    </a>
+                </th>
                 <th>Preț</th>
                 <th>Pasager</th>
                 <th>Zbor</th>
@@ -60,18 +53,18 @@
                 <td th:text="${ticket.id}"></td>
                 <td th:text="${ticket.seatNumber}"></td>
                 <td th:text="${ticket.price}"></td>
-
-                <!-- Navigare prin obiecte -->
                 <td th:text="${ticket.passenger != null ? ticket.passenger.name : '-'}"></td>
                 <td th:text="${ticket.flight != null ? ticket.flight.flightNumber : '-'}"></td>
-
                 <td>
                     <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
                     <a th:href="@{/tickets/{id}/edit(id=${ticket.id})}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                    <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post" style="display:inline;" onsubmit="return confirm('Ștergi?');">
+                    <form th:action="@{/tickets/{id}/delete(id=${ticket.id})}" method="post" style="display:inline;" onsubmit="return confirm('Ștergi acest bilet?');">
                         <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                     </form>
                 </td>
+            </tr>
+            <tr th:if="${tickets.empty}">
+                <td colspan="6" class="text-center text-muted">Nu s-au găsit bilete.</td>
             </tr>
             </tbody>
         </table>

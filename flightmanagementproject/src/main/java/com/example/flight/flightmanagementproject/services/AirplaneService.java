@@ -19,9 +19,7 @@ public class AirplaneService {
         this.repository = repository;
     }
 
-    /**
-     * Metoda actualizată pentru Proiectul 5: Suportă sortare și filtrare avansată.
-     */
+
     public List<Airplane> getAllAirplanes(String keyword, String sortField, String sortDir) {
         // 1. Configurare Sortare
         if (sortField == null || sortField.isEmpty()) {
